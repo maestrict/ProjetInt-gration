@@ -35,36 +35,45 @@ class Db{
     Vous devez remplir tous les champs</p>');
         } else //On check le mot de passe
         {
-            $query = $this->iPdo->prepare('SELECT userId, userPseudo, LastName, FirstName, mdp, mail, dateBirth FROM tbUsers WHERE userPseudo = :pseudo');
+            $query = $this->iPdo->prepare('SELECT userId, userPseudo, LastName, FirstName, mdp, mail, dateBirth, address, zipCode FROM tbUsers WHERE userPseudo = :pseudo');
             $query->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
             $query->execute();
-            $data = $query->fetch();
-            if(isset($_SESSION)){
-                session_unset();
-                session_destroy();
+            $data = $query->fetch(PDO::FETCH_ASSOC);
+            //echo "test data =".$data;
+            if(!$data){//si pas dans la table user => c'est un club
+                $query = $this->iPdo->prepare('SELECT clubId, clubPseudo, Name, mail, mdp, address, zipCode FROM tbClub WHERE clubPseudo = :pseudo');
+                $query->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+                $query->execute();
+                $data = $query->fetch(PDO::FETCH_ASSOC);
             }
-            session_start();
-            if ($data['mdp'] == $_POST['mdp']) // Acces OK !
+
+            if (password_verify($_POST['mdp'], $data['mdp'])) // Accès OK !
             {
+                if(isset($_SESSION)){
+                    session_unset();
+                    session_destroy();
+                }
+                unset($data['mdp']);//pour ne pas prendre le mdp dans la session
+                session_start();
                 foreach ($data as $key =>$value){
-                    $_SESSION['user'][$key] = $data[$key];
+                    $_SESSION[isset($data['userId'])?'user':'club'][$key] = $data[$key];
                 }
             } else // Acces pas OK !
             {
-                echo "<script>alert('Mot de passe et/ou pseudo incorrect')</script>";
+                die ("<script>alert('Mot de passe et/ou pseudo incorrect')</script>");
             }
             $query->CloseCursor();
         }
     }
 
-    public function inscription(){
+    public function inscription_client(){
         try{
             $date =date('y/m/d',strtotime($_POST['date']));
             $stmt = $this->iPdo->prepare("INSERT INTO tbUsers(userPseudo, LastName, FirstName, mdp, mail, dateInscription, dateBirth ) VALUES(:userPseudo, :LastName, :FirstName, :mdp, :mail, :inscription, :birth)");
             $stmt->bindParam(':userPseudo',$_POST['pseudo']);
             $stmt->bindParam(':LastName',$_POST['nom']);
             $stmt->bindParam(':FirstName',$_POST['prenom']);
-            $stmt->bindParam(':mdp',$_POST['mdp']);
+            $stmt->bindParam(':mdp', password_hash($_POST['mdp'], PASSWORD_BCRYPT)); // Choix de l'algorithme de hashage <!> si 1 varchar 255 dans la db
             $stmt->bindParam(':mail',$_POST['email']);
             $stmt->bindParam(':inscription',date("Y/m/d"));
             $stmt->bindParam(':birth',$date);
@@ -73,6 +82,90 @@ class Db{
             die("Erreur lors de la query");
         }
         $this->login();
+    }
+
+    public function inscription_club(){
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("INSERT INTO tbClub(clubPseudo, Name, mail,zipcode, mdp, dateInscription) VALUES(:clubPseudo, :Name, :mail, :zipcode, :mdp, :inscription)");
+            $stmt->bindParam(':clubPseudo',$_POST['clubPseudo']);
+            $stmt->bindParam(':Name',$_POST['nom']);
+            $stmt->bindParam(':mail',$_POST['email']);
+            $stmt->bindParam(':zipcode',$_POST['zipcode']);
+            $stmt->bindParam(':mdp',password_hash($_POST['mdp'], PASSWORD_BCRYPT));
+            $stmt->bindParam(':inscription',date("Y/m/d"));
+            $stmt->execute();
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function getTerrains(){
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("SELECT * FROM integration.tbTerrains WHERE clubId = :id;");
+            $stmt->bindParam(':id',$_SESSION['clubId']);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $this->iPdo->prepare("SELECT * FROM integration.tbSport WHERE clubId = :id;");
+            $stmt->bindParam(':id',$_SESSION['clubId']);
+            $stmt->execute();
+            foreach ($data as $key =>$value){
+                $_SESSION['terrains'][$key] = $data[$key];
+            }
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function update($isUser){
+        if($isUser){
+            try{
+                $stmt = $this->iPdo->prepare("UPDATE integration.tbUsers
+SET userPseudo = :pseudo, LastName = :lastName, FirstName = :firstName, address = :address, zipCode = :zipCode, mail = :mail
+WHERE userId = :id");
+                $stmt->bindParam(':id',$_SESSION['user']['userId']);
+                $stmt->bindParam(':pseudo',$_POST['pseudo']);
+                $stmt->bindParam(':lastName',$_POST['nom']);
+                $stmt->bindParam(':firstName',$_POST['prenom']);
+                $stmt->bindParam(':address',$_POST['address']);
+                $stmt->bindParam(':zipCode',$_POST['zipCode']);
+                $stmt->bindParam(':mail',$_POST['email']);
+                //$stmt->bindParam(':mdp',password_hash($_POST['mdp'], PASSWORD_BCRYPT));
+                $stmt->execute();
+//                if($stmt->rowCount()) {
+//                    echo 'success';
+//                } else {
+//                    echo 'update failed';
+//                }
+            }
+            catch(Exception $e){
+                die("Erreur lors de la query d'update user");
+            }
+        }else{
+            try{
+                $stmt = $this->iPdo->prepare("UPDATE integration.tbClub
+SET clubPseudo = :pseudo, Name = :Name, Address = :address, zipCode = :zipCode, mail = :mail, telephone = :telephone
+WHERE clubId = :id");
+                echo("post:");
+                print_r($_POST);
+                echo("session:");
+                print_r($_SESSION);
+                $stmt->bindParam(':id',$_SESSION['club']['clubId']);
+                $stmt->bindParam(':pseudo',$_POST['pseudo']);
+                $stmt->bindParam(':Name',$_POST['nom']);
+                $stmt->bindParam(':address',$_POST['address']);
+                $stmt->bindParam(':zipCode',$_POST['zipcode']);
+                $stmt->bindParam(':mail',$_POST['email']);
+                $stmt->bindParam(':telephone',$_POST['tel']);
+                $stmt->execute();
+            }
+            catch(Exception $e){
+                die("Erreur lors de la query d'update club");
+            }
+        }
     }
 
     //appele des procédure enregistré sur le serveur

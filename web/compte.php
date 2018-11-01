@@ -42,7 +42,7 @@ require_once('assets/php/utils.php');
             <div id="compte">
                 <p>voici les données de votre compte</p>
                 <form action="" method="post" id="formCompte">
-                    <div id="data">
+                    <div class="left">
                         <?php
                         if(isset($_SESSION['user'])){
                             //<input type="password" name="mdp" placeholder="mdp" value="{$_SESSION['user']['mdp']}" maxlength="50" required>
@@ -165,7 +165,7 @@ EOT;
                         echo $form;
                     ?>
                     </div>
-                    <div id="img">
+                    <div class="right">
                         <img src="images/avatar.jpg" id="avatar" onclick="chg_img()">
                         <?php
                         if(isset($_SESSION['club'])){

@@ -3996,3 +3996,6 @@ input, select, textarea {
 		margin:auto;
 		width:60%;
 	}
+.label{
+	display: flex;
+}

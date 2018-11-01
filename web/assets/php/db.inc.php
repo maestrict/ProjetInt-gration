@@ -104,16 +104,50 @@ class Db{
     public function getTerrains(){
         try{
             $date =date('y/m/d',strtotime($_POST['date']));
-            $stmt = $this->iPdo->prepare("SELECT * FROM integration.tbTerrains WHERE clubId = :id;");
-            $stmt->bindParam(':id',$_SESSION['clubId']);
+            $stmt = $this->iPdo->prepare("SELECT tId, clubId, Ter.sId, sport, description, reserve 
+                                                   FROM integration.tbTerrains as Ter
+                                                   join integration.tbSport as Sp 
+                                                   WHERE clubId = :id;");
+            $stmt->bindParam(':id',$_SESSION['club']['clubId']);
             $stmt->execute();
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-            $stmt = $this->iPdo->prepare("SELECT * FROM integration.tbSport WHERE clubId = :id;");
-            $stmt->bindParam(':id',$_SESSION['clubId']);
-            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            echo"data:";
+            print_r($data);
             foreach ($data as $key =>$value){
                 $_SESSION['terrains'][$key] = $data[$key];
             }
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function suppTerrains(){
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("DELETE FROM integration.tbTerrains WHERE tId = :id;");
+            $stmt->bindParam(':id',$_POST[]);
+            //$stmt->execute();
+            print_r($_POST);
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function addTerrains(){
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("insert into integration.tbTerrains(tId, sId, clubId, reserve) 
+                                                    values(:tId, :sId, :clubId, :reserve);");
+            $stmt->bindParam(':tId',$_POST['tId']);
+            $stmt->bindParam(':clubId',$_SESSION['club']['clubId']);
+            $stmt->bindParam(':sId',$_POST['sId']);
+            $stmt->bindParam(':reserve',$_POST['reserve']);
+            $stmt->execute();
         }
         catch(Exception $e){
             die("Erreur lors de la query");

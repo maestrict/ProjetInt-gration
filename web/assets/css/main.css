@@ -3982,10 +3982,10 @@ input, select, textarea {
 		width: 200px;
 	}
 
-	div #data{
+	div .left{
 		float: left;
 	}
-	div #img{
+	div .right{
 		float: right;
 	}
 	#sub_compte{

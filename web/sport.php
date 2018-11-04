@@ -1,12 +1,12 @@
 <?php
 session_start();
 require_once('assets/php/utils.php');
-terrain('get');
+$sport = sport('get');
 ?>
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Gestion des terrains</title>
+		<title>sport</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -38,13 +38,13 @@ terrain('get');
 				<!-- Main -->
 					<article id="main">
 						<section class="wrapper compte">
-							<div id="tbTerrain" class="inner">
-                                <form method="post" name="terrain">
+							<div id="tbSport" class="inner">
+                                <form method="post" name="sport">
                                     <table>
                                         <?php
                                         echo"<thead><tr>";
-                                        foreach ($_SESSION['terrains'][0] as $cle => $value){
-                                            if($cle == 'clubId' || $cle == 'tId'){
+                                        foreach ($sport[0] as $cle => $value){
+                                            if($cle == 'sId'){
 
                                             }else{
                                                 echo"<td>".$cle."</td>";
@@ -52,31 +52,29 @@ terrain('get');
                                         }
                                         echo"</tr></thead>";
                                         echo"<tbody><tr>";
-                                        foreach ($_SESSION['terrains'] as $terrain => $test){
-                                            foreach ($_SESSION['terrains'][$terrain] as $cle => $value){
-                                                if($cle == 'clubId' || $cle == 'tId'){
+                                        foreach ($sport as $sp => $vsp){
+                                            foreach ($sport[$sp] as $cle => $value){
+                                                if($cle == 'sId'){
 
                                                 }else{
                                                     echo"<td>".$value."</td>";
                                                 }
                                             }
                                             echo <<<EOT
-<td><input type="button" name="suppTerrain" id="{$_SESSION['terrains'][$terrain]['tId']}" value="supprimer" onclick="ajax('suppTerrains',this.id);"></td>
+<td><input type="button" name="suppSport" id="{$vsp['sId']}" value="supprimer" onclick="ajax('suppSport',this.id);"></td>
 EOT;
                                             echo "</tr>";
                                         }
                                         echo"</tr></tbody>";
                                         echo"<tfoot><tr>";
-                                        foreach ($_SESSION['terrains'][0] as $cle => $value){
-                                            if ($cle == 'clubId' || $cle == 'tId'){
+                                        foreach ($sport[0] as $cle => $value){
+                                            if($cle == 'sId'){
 
-                                            }elseif($cle == 'sId' || $cle == 'reserve'){
-                                                echo "<td><input type='text' name='".$cle."'></td>";
                                             }else{
-                                                echo "<td><input type='text' name='".$cle."' disabled></td>";
+                                                echo "<td><input type='text' name='".$cle."'></td>";
                                             }
                                         }
-                                        echo"<td><input type='submit' name='ajoutTerrain' value='ajouter'></td>";
+                                        echo"<td><input type='submit' name='ajoutSport' value='ajouter'></td>";
                                         echo "</tr></tfoot>";
                                         ?>
                                     </table>

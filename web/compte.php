@@ -28,7 +28,12 @@ require_once('assets/php/utils.php');
                         <ul>
                             <li><a href="index.php">déconnection</a></li>
                             <li><a href="compte.php">Home</a></li>
-                            <li><a href="#">Compte</a></li>
+                            <li><a href="sport.php">sport</a></li>
+                            <?php
+                            if(isset($_SESSION['club'])) {
+                                echo"<li><a href = \"terrain.php\"> gestion des terrains </a></li>";
+                            }
+                            ?>
                         </ul>
                     </div>
                 </li>
@@ -170,7 +175,7 @@ EOT;
                         <?php
                         if(isset($_SESSION['club'])){
                             $donnee = <<<EOT
-                            <a href="terrain.php">gestion des terrains</a>
+                            <br><a href="terrain.php">gestion des terrains</a>
 EOT;
                         }
                         echo $donnee;

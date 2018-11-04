@@ -56,6 +56,10 @@ class Db{
                 unset($data['mdp']);//pour ne pas prendre le mdp dans la session
                 session_start();
                 foreach ($data as $key =>$value){
+                    if($key == 'dateBirth'){
+                        $_SESSION[isset($data['userId'])?'user':'club'][$key] = date('d/m/y',strtotime($data[$key]));
+                        //die (date('d/m/y',strtotime($data[$key])));
+                    }
                     $_SESSION[isset($data['userId'])?'user':'club'][$key] = $data[$key];
                 }
             } else // Acces pas OK !
@@ -106,7 +110,7 @@ class Db{
             $date =date('y/m/d',strtotime($_POST['date']));
             $stmt = $this->iPdo->prepare("SELECT tId, clubId, Ter.sId, sport, description, reserve 
                                                    FROM integration.tbTerrains as Ter
-                                                   join integration.tbSport as Sp 
+                                                   join integration.tbSport as Sp ON Ter.sId = Sp.sId 
                                                    WHERE clubId = :id;");
             $stmt->bindParam(':id',$_SESSION['club']['clubId']);
             $stmt->execute();
@@ -114,24 +118,11 @@ class Db{
             while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
                 array_push($data, $temp);
             }
-            echo"data:";
-            print_r($data);
             foreach ($data as $key =>$value){
-                $_SESSION['terrains'][$key] = $data[$key];
+                foreach ($data[$key] as $donnee => $vdonnee){
+                    $_SESSION['terrains'][$key][$donnee] = $data[$key][$donnee];
+                }
             }
-        }
-        catch(Exception $e){
-            die("Erreur lors de la query");
-        }
-    }
-
-    public function suppTerrains(){
-        try{
-            $date =date('y/m/d',strtotime($_POST['date']));
-            $stmt = $this->iPdo->prepare("DELETE FROM integration.tbTerrains WHERE tId = :id;");
-            $stmt->bindParam(':id',$_POST[]);
-            //$stmt->execute();
-            print_r($_POST);
         }
         catch(Exception $e){
             die("Erreur lors de la query");
@@ -141,9 +132,8 @@ class Db{
     public function addTerrains(){
         try{
             $date =date('y/m/d',strtotime($_POST['date']));
-            $stmt = $this->iPdo->prepare("insert into integration.tbTerrains(tId, sId, clubId, reserve) 
-                                                    values(:tId, :sId, :clubId, :reserve);");
-            $stmt->bindParam(':tId',$_POST['tId']);
+            $stmt = $this->iPdo->prepare("insert into integration.tbTerrains(sId, clubId, reserve) 
+                                                    values(:sId, :clubId, :reserve);");
             $stmt->bindParam(':clubId',$_SESSION['club']['clubId']);
             $stmt->bindParam(':sId',$_POST['sId']);
             $stmt->bindParam(':reserve',$_POST['reserve']);
@@ -151,6 +141,57 @@ class Db{
         }
         catch(Exception $e){
             die("Erreur lors de la query");
+        }
+    }
+
+    public function suppTerrains($id){
+        try{
+            $appel = 'call suppTerrain('.$id.')';
+            $sth = $this->iPdo->prepare($appel);
+            $sth->execute();
+        }catch(PDOException $e){
+            $this->pdoException = $e;
+            return ['__ERR__' => $this->getException()];
+        }
+    }
+
+    public function getSport(){
+        try{
+            $stmt = $this->iPdo->prepare("SELECT sId, sport, description
+                                                   FROM integration.tbSport");
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return $data;
+        }catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function addSport(){
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("insert into integration.tbSport(sport, description) 
+                                                    values(:sport, :description);");
+            $stmt->bindParam(':sport',$_POST['sport']);
+            $stmt->bindParam(':description',$_POST['description']);
+            $stmt->execute();
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    public function suppSport($id){
+        try{
+            $appel = 'call suppSport('.$id.')';
+            $sth = $this->iPdo->prepare($appel);
+            $sth->execute();
+        }catch(PDOException $e){
+            $this->pdoException = $e;
+            return ['__ERR__' => $this->getException()];
         }
     }
 

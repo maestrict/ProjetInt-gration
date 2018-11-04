@@ -20,17 +20,37 @@ function dbUpdate(){
     $iDB = new Db();
     $iDB->update(isset($_SESSION['user'])?true:false);
 }
-function terrain($choix){
+function terrain($choix, $param=''){
     $iDB = new Db();
     switch ($choix){
         case('supp'):
-            $iDB->suppTerrains();
+            $iDB->suppTerrains($param);
+            /*foreach ($_SESSION['terrains'] as $key => $value){
+                if($value['tId'] == $param) unset($_SESSION['terrains'][$key]);
+            }*/
             break;
         case('get'):
             $iDB->getTerrains();
             break;
         case('ajout'):
             $iDB->addTerrains();
+            break;
+        default:
+            die("erreur function Terrain");
+            break;
+    }
+}
+function sport($choix, $param=''){
+    $iDB = new Db();
+    switch($choix){
+        case('get'):
+            return $iDB ->getSport();
+            break;
+        case('ajout'):
+            $iDB ->addSport();
+            break;
+        case('supp'):
+            return $iDB ->suppSport($param);
             break;
     }
 }
@@ -43,8 +63,14 @@ if(isset($_POST['inscription_client'])){
     dbLogin();
 }elseif(isset($_POST['change'])){
     dbUpdate();
-}elseif(isset($_POST['suppTerrain'])){
-    Terrain('supp');
 }elseif(isset($_POST['ajoutTerrain'])){
     Terrain('ajout');
+}elseif($_POST['action'] == 'suppTerrains'){
+    Terrain('supp', $_POST['id']);
+}elseif($_POST['action'] == 'suppSport'){
+    sport('supp', $_POST['id']);
+}elseif(isset($_POST['ajoutSport'])){
+    sport('ajout');
 }
+
+

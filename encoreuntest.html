@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<body onload="getLocation()">
+
+
+
+<p id="demo"></p>
+<div id="map" style="width:500px; height:500px">where is mym ap</div>
+
+<script>
+<!-- var x = document.getElementById("demo"); -->
+var positionTerrain = [];
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(myMap);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function myMap(position) {
+//debugger;
+var mapOptions = {
+    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.HYBRID
+};
+debugger;
+
+<!-- for (positionTerrain=0; positionTerrain < maxlength(positionTerrain; positionTerrain++){ -->
+	<!-- var marker = new google.maps.Marker({ -->
+    <!-- position: myLatlng, -->
+<!-- }); -->
+
+ 
+ <!-- } -->
+
+
+var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+}
+
+
+
+function localize(){
+	var self = this;
+	debugger;
+	function getLocation(callback) {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(callback);
+		} else {
+			console.error("Geolocation is not supported by this browser.");
+		}
+	}
+	//var infowindow = new google.maps.InfoWindow;
+
+	getLocation(function(position) {
+		var mapOptions = {
+			center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+			zoom: 16,
+			mapTypeId: google.maps.MapTypeId.HYBRID
+		};
+		debugger;
+		
+
+		var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+	});
+};
+		
+		
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr6G5Rd6OOvx0_9SUFoYgrciriAgEvFgc&callback=getLocation"></script>
+
+</body>
+</html>

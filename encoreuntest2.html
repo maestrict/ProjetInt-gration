@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+<body>
+
+
+
+<p id="demo"></p>
+<div id="floating-panel">
+      <input onclick="removeOverlay();" type=button value="Remove overlay">
+      <input onclick="addOverlay();" type=button value="Restore overlay">
+    </div>
+<div  onload=" getLocation();" id="map" style="width:500px; height:500px"></div>
+
+<script>
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(myMap);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+var historicalOverlay;
+var map;
+function myMap(position) {
+//debugger;
+var mapOptions = {
+    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+    zoom: 14,
+    
+};
+
+
+map = new google.maps.Map(document.getElementById("map"), mapOptions);
+var imageBounds = {
+          north: 50.71,
+          south: 50.7,
+          east: 4.6,
+          west: 4.59
+        };
+
+        historicalOverlay = new google.maps.GroundOverlay(
+            'https://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg',
+            imageBounds);
+
+        historicalOverlay.setMap(map);
+		
+		
+}
+
+
+
+		
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr6G5Rd6OOvx0_9SUFoYgrciriAgEvFgc&callback=getLocation"></script>
+
+</body>
+</html>

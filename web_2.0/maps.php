@@ -15,7 +15,7 @@ $terrains = terrain('get');
     <script src="assets/js/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
     integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr6G5Rd6OOvx0_9SUFoYgrciriAgEvFgc&callback=getLocation"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=[apiKey]&callback=getLocation"></script>
     <link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
     <script src='fullcalendar/lib/jquery.min.js'></script>
     <script src='fullcalendar/lib/moment.min.js'></script>

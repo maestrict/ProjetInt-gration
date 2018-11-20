@@ -8,8 +8,8 @@ class Db{
 
     public function __construct(){
         try{
-            $this->iPdo = new PDO('mysql:host='.$this->getServer().';dbname=integration'
-                                ,'root','integration3');
+            $this->iPdo = new PDO('mysql:host='.$this->getServer().';dbname=[dbname]'
+                                ,'[compte]','[password]');
             $this->iPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         }catch(PDOException $e){
             $this->pdoException = $e;

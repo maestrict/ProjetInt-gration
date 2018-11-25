@@ -7,6 +7,7 @@ require 'assets/php/secure.inc.php';
 <head>
     <title>Acceuil</title>
     <meta name="viewport" content="width=device-width , initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logo.ico">
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>

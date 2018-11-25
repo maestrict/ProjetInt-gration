@@ -53,3 +53,18 @@ ul li{
     width:500px;
     height:500px;
 }
+.index{
+    margin-top: 5em;
+}
+.contact{
+    padding: 1em;
+}
+#contain{
+    margin-left: 2em;
+}
+.annonce{
+    background-color: #3a87ad;
+    margin:0.5em;
+    padding:1em;
+    border-radius: 0.5em;
+}

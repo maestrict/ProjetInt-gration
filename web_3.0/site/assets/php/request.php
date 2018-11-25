@@ -32,8 +32,36 @@ switch (true){
         $date = $iDb->Reserve($_POST['id']['id']);
         if(in_array($_POST['id']['start'], $date)) return false;
         if(in_array($_POST['id']['end'], $date)) return false;
-        $iDb->makeReservation($_POST['id']);
         die(true);
+        break;
+    case($_POST['action'] == 'reservation'):
+        $iDb = new Db();
+        $iDb->makeReservation($_POST['id']);
+        break;
+    case($_POST['action'] == 'user'):
+        $iDb = new Db();
+        die(json_encode($iDb->mAmis($_POST['id'] == null?"tout":$_POST['id'])));
+        break;
+    case($_POST['action'] == 'annonce'):
+        $iDb = new Db();
+        die(json_encode($iDb->groups()));
+        break;
+    case($_POST['action'] == 'rejoindreGroup'):
+        $iDb = new Db();
+        //die(json_encode($iDb->inscGroups($_POST['id'])));
+        if($iDb->inscGroups($_POST['id']) == 1){
+            die('vous etes déjà dans ce groupe');
+        }else{
+            die("votre inscription à bien été enregistrée");
+        }
+        break;
+    case($_POST['action'] == 'mreserve'):
+        $iDb = new Db();
+        die(json_encode($iDb->mreserve()));
+        break;
+    case($_POST['action'] == 'annulerGroupe'):
+        $iDb = new Db();
+        die($iDb->annuGroupe($_POST['id']));
         break;
 }
 

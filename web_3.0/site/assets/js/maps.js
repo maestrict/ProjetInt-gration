@@ -1,5 +1,6 @@
 var map;
 var marqueur = [];
+var event = [];
 function myMap() {
 //debugger;
     let mapOptions = {
@@ -23,7 +24,7 @@ function addMarker(terrain) {
 }
 
 function makeTable(data){
-    data = JSON.parse(ajax('terrain', {'address':data['address']}));
+    data = JSON.parse(ajax('terrain', {'spec':[data['address'], data['sport']]}));
     /*delete data['sId'];
     delete data['description'];
     delete data['latitude'];
@@ -41,7 +42,7 @@ function makeTable(data){
         for (let x in data[y]) {
             main += "<td>" + data[y][x] + "</td>";
         }
-        main += "<td><input type='button' value='horaire' onclick='calendar("+data['tId']+")'></td></tr>";
+        main += "<td><input type='button' value='horaire' onclick='calendar("+data[y]['tId']+")'></td></tr>";
     }
     main += "</tbody>";
     return table+header+main;
@@ -63,21 +64,27 @@ function calendar(tId) {
 
 function addEvent(tId, start, end) {
     start = moment(start).format('YYYY-MM-DD HH:mm:00');
+    event.push(start);
     end = moment(end).format('YYYY-MM-DD HH:mm:00');
-    let title = prompt('Event Title:');
-    let eventData;
-    if(ajax('isfree', {'id': tId, 'start':start, 'end': end})){
-        // console.log("start "+start);
-        // console.log("end "+end);
-        if (title) {
-            eventData = {
-                title: title,
-                start: start,
-                end: end,
-                overlap: false
-            };
-            $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-        }
-        $('#calendar').fullCalendar('unselect');
+    event.push(end);
+    event.push(tId);
+    if(ajax('isfree', {'id': event[2], 'start':event[0], 'end': event[1]})){
+        $( "#dialog" ).dialog("open");
     }
+}
+function reserve(){
+    // console.log("start "+start);
+    // console.log("end "+end);
+    // console.log($('#partenaire').val());
+    let eventData;
+    $("#dialog").dialog("close");
+    eventData = {
+        title: "",
+        start: event[0],
+        end: event[1],
+        overlap: false
+    };
+    ajax('reservation', {'id': event[2], 'start':event[0], 'end': event[1], 'participant': parseInt($('#partenaire').val())+1});
+    $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+    $('#calendar').fullCalendar('unselect');
 }

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Moovego</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logo.ico">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <script src="assets/js/jquery.min.js"></script>
@@ -54,7 +55,7 @@
 <header id="banner">
     <div id="home" class="jumbotron">
         <h2>MooveGo</h2>
-        <p>Une autre façon de pratiquer du sport<br> avec de nouvelles personnes</p>
+        <p class="font-italic">Sport anywhere with any body.</p>
         <a href="#one" class="more scrolly">En savoir plus</a>
     </div>
 </header>
@@ -71,28 +72,28 @@
     </section>
 
     <!-- Two -->
-    <section id="two" class="row">
-        <div class="col-md-4 bg-light">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+    <section id="two" class="index card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm">
+            <img class="rounded-circle mx-auto" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
             <h2>Trouvez un terrain</h2>
             <p>Grâce à notre système de localisation des clubs et vos critères.</p>
             <a class="btn btn-secondary" href="#" role="button">View details »</a>
         </div>
-        <div class="col-md-4 bg-light">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+        <div class="card mb-4 shadow-sm">
+            <img class="rounded-circle mx-auto" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
             <h2>Trouvez un partenaire</h2>
             <p>Grâce à notre système de mise en relation de sportifs et vos critères.</p>
             <a class="btn btn-secondary" href="#" role="button">View details »</a>
         </div>
-        <div class="col-md-4 bg-light">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+        <div class="card mb-4 shadow-sm">
+            <img class="rounded-circle mx-auto" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
                 <h2>Réservez le terrain</h2>
                 <p>Grâce à notre plateforme qui est directement liée aux clubs.</p>
             <a class="btn btn-secondary" href="#" role="button">View details »</a>
         </div>
     </section>
 
-    <section id="histoire" class=" mx-auto text-center col-sm-8">
+    <section id="histoire" class="index mx-auto text-center col-sm-8">
         <div class="inner">
             <header class="major">
                 <h2>HISTOIRE</h2>
@@ -114,6 +115,51 @@
 Nous voulons que la société utilise la connectivité au service des relations humaines et propose des solutions adaptées à chacun.</span>
         </div>
     </section>
+    <div class="bg-light contact index">
+        <div class="well well-sm">
+            <form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">
+                                Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter name" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">
+                                Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span>
+                                </span>
+                                <input type="email" class="form-control" id="email" placeholder="Enter email" required="required" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">
+                                Subject</label>
+                            <select id="subject" name="subject" class="form-control" required="required">
+                                <option value="na" selected="">Choose One:</option>
+                                <option value="service">General Customer Service</option>
+                                <option value="suggestions">Suggestions</option>
+                                <option value="product">Product Support</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">
+                                Message</label>
+                            <textarea name="message" id="message" class="form-control" rows="9" cols="25" required="required"
+                                      placeholder="Message"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary pull-right" id="btnContactUs">
+                            Send Message</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <?php
     require 'assets/php/footer.inc.php'

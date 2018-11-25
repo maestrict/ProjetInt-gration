@@ -301,15 +301,140 @@ WHERE clubId = :id");
 
     function makeReservation($data){
         try{
-            $stmt = $this->iPdo->prepare("insert into reservation(idTerrain, startDate, finDate) 
-                                                    values(:id, :start, :end );");
+            $grid = explode(" ", $data['start'])[1].explode("-", explode(" ", $data['start'])[0])[2].explode("-", explode(" ", $data['start'])[0])[1].$data['id'].$_SESSION['user']['userId'];
+            $stmt = $this->iPdo->prepare("insert into tbGroupe(groupeid, userid) 
+                                                    values(:idgroupe, :user);");
+            $stmt->bindParam(':idgroupe',$grid);
+            $stmt->bindParam(':user',$_SESSION['user']['userId']);
+            $stmt->execute();
+
+            $stmt = $this->iPdo->prepare("insert into reservation(idTerrain, startDate, finDate, idgroupe, nbrParticipants) 
+                                                    values(:id, :start, :end , :idgroupe, :nbrP);");
             $stmt->bindParam(':id',$data['id']);
             $stmt->bindParam(':start',$data['start']);
             $stmt->bindParam(':end',$data['end']);
+            $stmt->bindParam(':idgroupe',$grid);
+            $stmt->bindParam(':nbrP',$data['participant']);
             $stmt->execute();
         }
         catch(Exception $e){
             die("Erreur lors de la query");
         }
+    }
+
+    function mreserve(){
+        try{
+            $stmt = $this->iPdo->prepare("SELECT cpt.userid, cpt.groupeid, idTerrain, startDate, finDate, ter.sId, address, sport
+                                                    from integration.reservation as reserve
+                                                    join integration.tbGroupe as cpt on reserve.idgroupe = cpt.groupeid
+                                                    join integration.tbTerrains as ter on reserve.idTerrain = ter.tId
+                                                    join integration.tbSport as sp on ter.sId = sp.sId
+                                                    where cpt.userid = :id");
+            $stmt->bindParam(':id',$_SESSION['user']['userId']);
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return $data;
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    function annuGroupe($id){
+        try{
+            $appel = "call suppDeGroupe(\"{$id}\",{$_SESSION['user']['userId']})";
+            //return $appel;
+            $sth = $this->iPdo->prepare($appel);
+            $sth->execute();
+        }catch(PDOException $e){
+            $this->pdoException = $e;
+            return ['__ERR__' => $this->getException()];
+        }
+        die("suppression reussie");
+    }
+
+    function mAmis($name){
+        try{
+            if($name == "tout"){
+                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName
+                                                    FROM integration.friend as fr
+                                                    join integration.tbUsers as user on fr.friendid = user.userid
+                                                    WHERE fr.userid = :id;");
+                $stmt->bindParam(':id',$_SESSION['user']['userId']);
+            }else {
+                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName
+                                                    FROM integration.friend as fr
+                                                    join integration.tbUsers as user on fr.friendid = user.userid
+                                                    WHERE FirstName = :name and fr.userid = :id;");
+                $stmt->bindParam(':name',$name);
+                $stmt->bindParam(':id',$_SESSION['user']['userId']);
+            }
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return($data);
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    function groups(){
+        try{
+            $stmt = $this->iPdo->prepare("SELECT id, nbrParticipants, groupeid, inscrit, idTerrain, startDate, finDate, idgroupe, ter.sId, address, sport
+                                                    from integration.reservation as reserve
+                                                    join (SELECT groupeid, count(userid) as inscrit
+		                                                  from integration.tbGroupe
+		                                                  group by groupeid)as cpt on reserve.idgroupe = cpt.groupeid
+                                                    join integration.tbTerrains as ter on reserve.idTerrain = ter.tId
+                                                    join integration.tbSport as sp on ter.sId = sp.sId
+                                                    where nbrParticipants > 1 and nbrParticipants > inscrit;");
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return $data;
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    function inscGroups($id){
+        try{
+            $stmt = $this->iPdo->prepare("select userid
+                                                   from integration.tbGroupe
+                                                   where groupeid = :id;");
+            $stmt->bindParam(':id',$id);
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp['userid']);
+            }
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+        if(in_array($_SESSION['user']['userId'], $data)){
+            return 1;
+        }
+        try{
+            $date =date('y/m/d',strtotime($_POST['date']));
+            $stmt = $this->iPdo->prepare("insert into integration.tbGroupe(groupeid, userid) 
+                                                    values(:groupe, :user);");
+            $stmt->bindParam(':groupe',$id);
+            $stmt->bindParam(':user',$_SESSION['user']['userId']);
+            $stmt->execute();
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+        return 0;
     }
 }

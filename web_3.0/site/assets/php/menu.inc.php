@@ -14,10 +14,10 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item"><a class="nav-link" href="../../acceuil.php">Acceuil</a></li>
-            <li class="nav-item"><a class="nav-link" href="../../maps.php">Recherche terrain</a></li>
-            <li class="nav-item"><a class="nav-link" href="../../terrain.php">Recherche partenaire</a></li>
-            <li class="nav-item"><a class="nav-link" href="../../compte.php">Mon Compte</a></li>
+            <li class="nav-item"><a class="nav-link" id="menuacceuil" href="../../acceuil.php">Acceuil</a></li>
+            <li class="nav-item"><a class="nav-link" id="menuterrain" href="../../maps.php">Recherche terrain</a></li>
+            <li class="nav-item"><a class="nav-link" id="menupartenaire" href="../../terrain.php">Recherche partenaire</a></li>
+            <li class="nav-item"><a class="nav-link" id="menucompte" href="../../compte.php">Mon Compte</a></li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0">
             <?php

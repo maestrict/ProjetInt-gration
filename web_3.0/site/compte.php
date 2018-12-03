@@ -14,10 +14,11 @@ $iDB = new Db();
 <head>
     <title>Compte</title>
     <meta name="viewport" content="width=device-width , initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logo_trans.ico">
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src='fullcalendar/lib/jquery.min.js'></script>
+    <script src='fullcalendar/lib/jquery-ui.min.js'></script>
     <script src='fullcalendar/lib/moment.min.js'></script>
     <script src='fullcalendar/fullcalendar.js'></script>
     <script src='fullcalendar/locale-all.js'></script>
@@ -30,36 +31,37 @@ $iDB = new Db();
 <?php
     require 'assets/php/menu.inc.php';
 ?>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-auto btn-group-vertical">
+                <span class="btn btn-outline-primary active">
+                <?php
+                echo(isset($_SESSION['user'])?"sportif":"club");
+                ?>
+                </span><br>
+                <input type="button" class="btn btn-outline-secondary" value="Mon profil" onclick="load('contain', 'profil')"><br>
+                <input type="button" class="btn btn-outline-secondary" value="Mes réservations" onclick="load('contain', 'reserve')"><br>
+                <input type="button" class="btn btn-outline-secondary" value="Mes partenaires" onclick="load('contain', 'partenaire')"><br>
+                <?php
+                if(isset($_SESSION['club'])){
+                    echo("<input type=\"button\" class=\"btn btn-outline-primary\" value=\"Mes Terrains\" onclick=\"load('contain', 'possession')\"><br>");
+                }
+                ?>
+            </div>
+            <div class="col">
+            <section id="contain">
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-auto btn-group-vertical">
-            <span class="btn btn-outline-primary active">
+            </section>
+            </div>
             <?php
-            echo(isset($_SESSION['user'])?"sportif":"club");
-            ?>
-            </span><br>
-            <input type="button" class="btn btn-outline-primary" value="Mon profil" onclick="load('contain', 'profil')"><br>
-            <input type="button" class="btn btn-outline-primary" value="Mes réservations" onclick="load('contain', 'reserve')"><br>
-            <input type="button" class="btn btn-outline-primary" value="Mes partenaires" onclick="load('contain', 'partenaire')"><br>
-            <?php
-            if(isset($_SESSION['club'])){
-                echo("<input type=\"button\" class=\"btn btn-outline-primary\" value=\"Mes Terrains\" onclick=\"load('contain', 'possession')\"><br>");
-            }
+                /*echo "<pre>";
+                    print_r($_SESSION);
+                echo "</pre>";*/
             ?>
         </div>
-        <div class="col">
-        <section id="contain">
-
-        </section>
-        </div>
-        <?php
-            /*echo "<pre>";
-                print_r($_SESSION);
-            echo "</pre>";*/
-        ?>
     </div>
-</div>
+</main>
 <?php
     require 'assets/php/footer.inc.php'
 ?>

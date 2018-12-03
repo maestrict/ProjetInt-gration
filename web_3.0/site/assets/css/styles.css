@@ -8,7 +8,6 @@
     background-repeat: no-repeat;
     background-size: cover;
 }*/
-
 .form-signin {
     width: 100%;
     max-width: 330px;
@@ -43,11 +42,16 @@ ul li{
     display: inline;
 }
 .jumbotron{
-    background-color: lightblue;
-    background-image: url("../img/logo.jpg");
-    background-size: contain;
+    background-image: url("../img/balle2.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center center;
+    /*background-size: contain;
     background-repeat: no-repeat;
-    background-position-x: right;
+    background-position-x: right;*/
+    color: whitesmoke;
 }
 #map{
     width:500px;
@@ -67,4 +71,53 @@ ul li{
     margin:0.5em;
     padding:1em;
     border-radius: 0.5em;
+}
+.title{
+    text-align: center;
+}
+.blue{
+    background-color: #4d78bc;
+}
+#shsport table{
+    text-align: center;
+    margin: auto;
+}
+#shsport table caption{
+    caption-side: top;
+    text-align: center;
+    color: black;
+}
+#histoire{
+    border:0.5em solid whitesmoke;
+    padding:1em;
+}
+.size{
+    height: 30%;
+}
+main{
+    background-color: #9596A5;
+    height: auto !important; /* real browsers */
+    min-height: 86vh; /* real browsers */
+    position: relative;
+}
+footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.btn-outline-secondary{
+    color:black;
+    border-color: black;
+}
+.container{
+    padding-top: 1em;
+}
+.ui-autocomplete{
+    z-index:100;
+}
+.card{
+    background-color: whitesmoke;
+}
+#slogan{
+    font-size: 2em;
 }

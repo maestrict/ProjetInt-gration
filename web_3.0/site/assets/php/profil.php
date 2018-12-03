@@ -1,10 +1,26 @@
 <?php
 session_start();
 ?>
-<p>voici les données de votre compte</p>
-<form action="" method="post" id="formCompte">
-    <div class="row">
+<script>
+    $(function() {
+        $( "#zipCode" ).autocomplete({
+            source: function( request, response ) {
+                $.ajax({
+                    url: "/assets/php/request.php",
+                    type:'post',
+                    data: {"autocomplete":"1"},
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+            },
+        });
+    });
+</script>
+<h4>voici les données de votre compte</h4>
+<div class="row">
     <div class="col">
+        <form id="formCompte" method="post" onSubmit="changeDonnee(); return false">
         <?php
         if(isset($_SESSION['user'])){
             //<input type="password" name="mdp" placeholder="mdp" value="{$_SESSION['user']['mdp']}" maxlength="50" required>
@@ -118,10 +134,25 @@ EOT;
         }
         echo $form;
         ?>
-        </div>
-        <div class="col">
-            <img class="rounded-circle mx-auto" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-        </div>
+            <input type="submit" name="change" value="sauvegarder" class="btn btn-secondary">
+        </form>
     </div>
-    <input type="submit" name="change" value="sauvegarder">
-</form>
+    <div class="col">
+        <img class="rounded-circle mx-auto" src="<?php
+        $extention = ['.jpg', '.png', '.jpeg', '.gif'];
+        $out = "/assets/img/default_profile.jpg";
+        foreach ($extention as $value){
+            $existe = file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/" . (isset($_SESSION['user'])?"user/".$_SESSION['user']['userPseudo']:"club/".$_SESSION['club']['Name']).$value);
+            if($existe) {
+                $out = "/uploads/" . (isset($_SESSION['user'])?"user/".$_SESSION['user']['userPseudo']:"club/".$_SESSION['club']['Name']).$value;
+            }
+        }
+        echo($out);
+        ?>" alt="Generic placeholder image" width="140" height="140">
+        <form  action="/assets/php/request.php" method="post" enctype="multipart/form-data">
+            Select image to upload:
+            <input type="file" name="fileToUpload" id="fileToUpload">
+            <input type="submit" value="Upload Image" name="img" class="btn btn-secondary">
+        </form>
+    </div>
+</div>

@@ -22,13 +22,32 @@ function addMarker(terrain) {
         $('#donne').html(makeTable(terrain))
     });
 }
+function setMapOnAll(map) {
+    for (let i = 0; i < marqueur.length; i++) {
+        marqueur[i].setMap(map);
+    }
+}
+function clearMarkers() {
+    setMapOnAll(null);
+}
+function deleteMarkers() {
+    clearMarkers();
+    marqueur = [];
+}
 
 function makeTable(data){
-    data = JSON.parse(ajax('terrain', {'spec':[data['address'], data['sport']]}));
-    /*delete data['sId'];
-    delete data['description'];
-    delete data['latitude'];
-    delete data['longitude'];*/
+    if($('#sport').val() == undefined){
+        data = JSON.parse(ajax('terrain', {'address':data['address']}));
+    }else{
+        data = JSON.parse(ajax('terrain', {'spec':[data['address'], data['sport']]}));
+    }
+    for (let i in data) { // supprimer les infos inutiles pour l'utilisateur
+        delete data[i]['clubId'];
+        delete data[i]['sId'];
+        delete data[i]['description'];
+        delete data[i]['latitude'];
+        delete data[i]['longitude'];
+    }
     let table = "<table class='table table-striped'>";
     let header = "<thead><tr>";
     for (let i in data[0]){
@@ -49,6 +68,7 @@ function makeTable(data){
 }
 
 function calendar(tId) {
+    $('#calendar').fullCalendar('destroy');
     let data=[];
     $.ajaxSetup({async:false});
     data = JSON.parse(ajax('calendar', tId));
@@ -58,7 +78,27 @@ function calendar(tId) {
         locale: 'fr',
         events: data,
         selectable: true,
-        select: function(start, end){addEvent(tId, start, end)}
+        select: function(start, end){addEvent(tId, start, end)},
+        header: {
+            center: 'addEventButton'
+        },
+        customButtons: {
+            addEventButton: {
+                text: 'add event...',
+                click: function() {
+                        var dateStr = prompt("Enter a date in 'YYYY-MM-DD HH:MM:SS' format");
+                        var start = moment(dateStr);
+                        dateStr = prompt("Enter a date in 'YYYY-MM-DD HH:MM:SS' format");
+                        var end = moment(dateStr);
+
+                    if (start.isValid() && end.isValid()) {
+                        addEvent(tId, start, end);
+                    } else {
+                        alert('Invalid date.');
+                    }
+                }
+            }
+        }
     });
 }
 

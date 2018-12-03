@@ -27,26 +27,26 @@ class Db{
                 : 'vps596525.ovh.net';
     }
 
-    public function login()
+    public function login($update = false, $pseudo="")
     {
-        if (empty($_POST['pseudo']) || empty($_POST['mdp'])) //Oublie d'un champ
+        if (empty($_POST['pseudo']) || empty($_POST['mdp'] && $update == false)) //Oublie d'un champ
         {
             die('<p>une erreur s\'est produite pendant votre identification.
     Vous devez remplir tous les champs</p>');
         } else //On check le mot de passe
         {
             $query = $this->iPdo->prepare('SELECT userId, userPseudo, LastName, FirstName, mdp, mail, dateBirth, address, zipCode FROM tbUsers WHERE userPseudo = :pseudo');
-            $query->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+            $query->bindValue(':pseudo', $update == false?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
             $query->execute();
             $data = $query->fetch(PDO::FETCH_ASSOC);
             if(!$data){//si pas dans la table user => c'est un club
                 $query = $this->iPdo->prepare('SELECT clubId, Name, mail, mdp, address, zipCode FROM tbClub WHERE Name = :pseudo');
-                $query->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+                $query->bindValue(':pseudo', $update == false?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
                 $query->execute();
                 $data = $query->fetch(PDO::FETCH_ASSOC);
             }
 
-            if (password_verify($_POST['mdp'], $data['mdp'])) // verification du hash mdp!
+            if (password_verify($_POST['mdp'], $data['mdp']) || $update == true) // verification du hash mdp!
             {
                 if(isset($_SESSION)){//si la session est set
                     session_unset();
@@ -134,6 +134,24 @@ class Db{
                                                         WHERE Ter.address = :address;");
                         $stmt->bindParam(':address',$where['address']);
                         break;
+                    // selection d'un code postal
+                    case('zip'):$stmt = $this->iPdo->prepare("SELECT tId, Ter.clubId, Name, Ter.sId, Ter.address, sport, description, latitude, longitude, ville
+                                                        FROM integration.tbTerrains as Ter
+                                                        join integration.tbSport as Sp ON Ter.sId = Sp.sId
+                                                        join integration.tbClub as Cl on Ter.clubId = Cl.clubId
+                                                        join integration.cities as city on Cl.zipCode = city .zip
+                                                        WHERE Cl.zipCode = :zip;");
+                        $stmt->bindParam(':zip',$where['zip']);
+                        break;
+                    // selection d'un creneau horraire
+                    case('dispo'):
+                        $stmt = $this->iPdo->prepare("SELECT * FROM integration.reservation
+                                                        where startDate between :start and :end
+                                                        or finDate between :start and :end; ");
+                        $stmt->bindParam(':start', $where['dispo']['start']);
+                        $stmt->bindParam(':end', $where['dispo']['end']);
+                        break;
+                    // selection d'une address et sport
                     case('spec'):$stmt = $this->iPdo->prepare("SELECT tId, Ter.clubId, Name, Ter.sId, Ter.address, sport, description, latitude, longitude 
                                                         FROM integration.tbTerrains as Ter
                                                         join integration.tbSport as Sp ON Ter.sId = Sp.sId
@@ -141,6 +159,14 @@ class Db{
                                                         WHERE Ter.address = :address and sport = :sport;");
                         $stmt->bindParam(':address',$where['spec'][0]);
                         $stmt->bindParam(':sport',$where['spec'][1]);
+                        break;
+                    // selection inverse d'id
+                    case('notId'):$stmt = $this->iPdo->prepare("SELECT tId, Ter.clubId, Name, Ter.sId, Ter.address, sport, description, latitude, longitude 
+                                                        FROM integration.tbTerrains as Ter
+                                                        join integration.tbSport as Sp ON Ter.sId = Sp.sId
+                                                        join integration.tbClub as Cl on Ter.clubId = Cl.clubId
+                                                        WHERE tid not in (:id);");
+                        $stmt->bindParam(':id',implode( ",",$where['notId']));
                         break;
                 }
             }
@@ -222,10 +248,11 @@ class Db{
         }
     }
 
-    public function getClubs(){
+    public function getClubs($id){
         try{
-            $stmt = $this->iPdo->prepare("SELECT clubPseudo, Name, address, mail
-                                                   FROM integration.tbClub");
+            $stmt = $this->iPdo->prepare("select * from tbClub
+                                                    left join cities as city on zipCode = city.zip
+                                                   Where clubId IN (".implode(',', $id).") ");
             $stmt->execute();
             $data = [];
             while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -237,19 +264,20 @@ class Db{
         }
     }
 
-    public function update($isUser){
-        if($isUser){
+    public function update($data){
+        if(sizeof($data)>6){
             try{
                 $stmt = $this->iPdo->prepare("UPDATE integration.tbUsers
-SET userPseudo = :pseudo, LastName = :lastName, FirstName = :firstName, address = :address, zipCode = :zipCode, mail = :mail
+SET userPseudo = :pseudo, LastName = :lastName, FirstName = :firstName, address = :address, zipCode = :zipCode, mail = :mail, dateBirth = :birth
 WHERE userId = :id");
                 $stmt->bindParam(':id',$_SESSION['user']['userId']);
-                $stmt->bindParam(':pseudo',$_POST['pseudo']);
-                $stmt->bindParam(':lastName',$_POST['nom']);
-                $stmt->bindParam(':firstName',$_POST['prenom']);
-                $stmt->bindParam(':address',$_POST['address']);
-                $stmt->bindParam(':zipCode',$_POST['zipCode']);
-                $stmt->bindParam(':mail',$_POST['email']);
+                $stmt->bindParam(':lastName',$data[0]);
+                $stmt->bindParam(':firstName',$data[1]);
+                $stmt->bindParam(':pseudo',$data[2]);
+                $stmt->bindParam(':birth',$data[3]);
+                $stmt->bindParam(':mail',$data[4]);
+                $stmt->bindParam(':address',$data[5]);
+                $stmt->bindParam(':zipCode',intval($data[6]));
                 //$stmt->bindParam(':mdp',password_hash($_POST['mdp'], PASSWORD_BCRYPT));
                 $stmt->execute();
 //                if($stmt->rowCount()) {
@@ -261,23 +289,24 @@ WHERE userId = :id");
             catch(Exception $e){
                 die("Erreur lors de la query d'update user");
             }
+            $this->login(true, $_POST['pseudo']);
         }else{
             try{
                 $stmt = $this->iPdo->prepare("UPDATE integration.tbClub
-SET clubPseudo = :pseudo, Name = :Name, Address = :address, zipCode = :zipCode, mail = :mail, telephone = :telephone
+SET Name = :Name, Address = :address, zipCode = :zipCode, mail = :mail, telephone = :telephone
 WHERE clubId = :id");
                 $stmt->bindParam(':id',$_SESSION['club']['clubId']);
-                $stmt->bindParam(':pseudo',$_POST['pseudo']);
-                $stmt->bindParam(':Name',$_POST['nom']);
-                $stmt->bindParam(':address',$_POST['address']);
-                $stmt->bindParam(':zipCode',$_POST['zipcode']);
-                $stmt->bindParam(':mail',$_POST['email']);
-                $stmt->bindParam(':telephone',$_POST['tel']);
+                $stmt->bindParam(':Name',$data[0]);
+                $stmt->bindParam(':telephone',$data[1]);
+                $stmt->bindParam(':mail',$data[2]);
+                $stmt->bindParam(':address',$data[3]);
+                $stmt->bindParam(':zipCode',$data[4]);
                 $stmt->execute();
             }
             catch(Exception $e){
                 die("Erreur lors de la query d'update club");
             }
+            $this->login(true, $_POST['nom']);
         }
     }
 
@@ -345,6 +374,18 @@ WHERE clubId = :id");
 
     function annuGroupe($id){
         try{
+            $stmt = $this->iPdo->prepare("select * from tbGroupe where groupeid = :id;");
+            $stmt->bindParam(':id',$id);
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+        try{
             $appel = "call suppDeGroupe(\"{$id}\",{$_SESSION['user']['userId']})";
             //return $appel;
             $sth = $this->iPdo->prepare($appel);
@@ -352,6 +393,17 @@ WHERE clubId = :id");
         }catch(PDOException $e){
             $this->pdoException = $e;
             return ['__ERR__' => $this->getException()];
+        }
+        if(count($data)<2){
+            try{
+                $appel = "call suppReserve(\"{$id}\")";
+                //return $appel;
+                $sth = $this->iPdo->prepare($appel);
+                $sth->execute();
+            }catch(PDOException $e){
+                $this->pdoException = $e;
+                return ['__ERR__' => $this->getException()];
+            }
         }
         die("suppression reussie");
     }
@@ -436,5 +488,19 @@ WHERE clubId = :id");
             die("Erreur lors de la query");
         }
         return 0;
+    }
+
+    function getCity(){
+        try{
+            $stmt = $this->iPdo->prepare("select ville from integration.cities");
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp['ville']);
+            }
+            return $data;
+        }catch(Exception $e){
+            die("Erreur lors de la query");
+        }
     }
 }

@@ -63,6 +63,14 @@ switch (true){
         $iDb = new Db();
         die($iDb->annuGroupe($_POST['id']));
         break;
+    case($_POST['action'] == 'update'):
+        $iDb = new Db();
+        $iDb->update($_POST['id']);
+        break;
+    case($_POST['action'] == 'club'):
+        $iDb = new Db();
+        die(json_encode($iDb->getClubs($_POST['id'])));
+        break;
 }
 
 if(isset($_POST['inscription_client'])){
@@ -73,15 +81,60 @@ if(isset($_POST['inscription_client'])){
     $iDB = new Db();
     $iDB->inscription_club();
     header('location: /acceuil.php');
-}
-if(isset($_POST['login'])){
+}elseif(isset($_POST['login'])){
     $iDB = new Db();
     $iDB->login();
     header('location: /acceuil.php');
-}
-if(isset($_POST['ajoutTerrain'])){
+}elseif(isset($_POST['ajoutTerrain'])){
     Terrain('ajout');
+}elseif(isset($_POST['img'])){
+    $target_dir = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+    $target_dir = isset($_SESSION['user']) ? $target_dir."user/" . $_SESSION['user']['userPseudo'] : $target_dir."club/" . $_SESSION['club']['Name'];
+    $target_file = $target_dir.".". array_reverse(explode(".", basename($_FILES["fileToUpload"]["name"])))[0];
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        if($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            $uploadOk = 0;
+            die("File is not an image.");
+        }
+    }
+// Check if file already exists
+    if (file_exists($target_file)) {
+        $uploadOk = 0;
+        die("Sorry, file already exists.");
+    }
+// Check file size
+    if ($_FILES["fileToUpload"]["size"] > 500000) {
+        $uploadOk = 0;
+        die("Sorry, your file is too large.");
+    }
+// Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+        $uploadOk = 0;
+        die("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+    }
+// Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        die("Sorry, your file was not uploaded.");
+// if everything is ok, try to upload file
+    } else {
+        //die(isset($_SESSION['user'])?"/uploads/user/".$_SESSION['user']['userPseudo']."/". basename($_FILES["fileToUpload"]["name"]):"/uploads/club/".$_SESSION['club']['Name']."/". basename($_FILES["fileToUpload"]["name"]));
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            header('location: /compte.php');
+            die("The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+        } else {
+            die("Sorry, there was an error uploading your file.");
+        }
+    }
 }
+
 function terrain($choix, $param=[]){
     $iDB = new Db();
     switch ($choix){

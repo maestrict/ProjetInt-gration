@@ -8,8 +8,20 @@
     <meta name="google-signin-client_id" content="749828527033-4t1d8gjkc1is63c86fpiv6dlm3t5hm1v.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" charset="utf-8" async defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <<script type="text/javascript">
+    <script type="text/javascript">
+      function onSignIn(googleUser){
+        var profile= googleUser.getBasicProfile();
+        $(".g-signin2").css("display", "none");
+        $(".data").css("display","block");
+      }
 
+      function signOut(){
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function(){
+          alert("You've been successfully signed out");
+          $(".g-signin2").css("display", "block");
+        })
+      }
     </script>
     <style media="screen">
       .g-signin2{margin-left:500px;

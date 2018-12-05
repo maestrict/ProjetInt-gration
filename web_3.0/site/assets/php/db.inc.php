@@ -411,13 +411,13 @@ WHERE clubId = :id");
     function mAmis($name){
         try{
             if($name == "tout"){
-                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName
+                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName, userPseudo, dateBirth
                                                     FROM integration.friend as fr
                                                     join integration.tbUsers as user on fr.friendid = user.userid
                                                     WHERE fr.userid = :id;");
                 $stmt->bindParam(':id',$_SESSION['user']['userId']);
             }else {
-                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName
+                $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName, userPseudo, dateBirth
                                                     FROM integration.friend as fr
                                                     join integration.tbUsers as user on fr.friendid = user.userid
                                                     WHERE FirstName = :name and fr.userid = :id;");
@@ -429,11 +429,41 @@ WHERE clubId = :id");
             while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
                 array_push($data, $temp);
             }
-            return($data);
+            return $data;
         }
         catch(Exception $e){
             die("Erreur lors de la query");
         }
+    }
+
+    function lookForFriends($name){
+        try{
+            $stmt = $this->iPdo->prepare("select * 
+                                              from integration.tbUsers
+                                              where userPseudo = :name or FirstName = :name or LastName = :name;");
+            $stmt->bindParam(':name',$name);
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return $data;
+        }catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    function addFriend($id){
+        try{
+            $stmt = $this->iPdo->prepare("INSERT INTO integration.friend(userid, friendid)
+                                                    VALUES(:moi,:id);");
+            $stmt->bindParam(':id',$id);
+            $stmt->bindParam(':moi',$_SESSION['user']['userId']);
+            $stmt->execute();
+        }catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+        $this->login();
     }
 
     function groups(){
@@ -446,6 +476,25 @@ WHERE clubId = :id");
                                                     join integration.tbTerrains as ter on reserve.idTerrain = ter.tId
                                                     join integration.tbSport as sp on ter.sId = sp.sId
                                                     where nbrParticipants > 1 and nbrParticipants > inscrit;");
+            $stmt->execute();
+            $data = [];
+            while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                array_push($data, $temp);
+            }
+            return $data;
+        }
+        catch(Exception $e){
+            die("Erreur lors de la query");
+        }
+    }
+
+    function listGroup($id){
+        try{
+            $stmt = $this->iPdo->prepare("SELECT * 
+                                                    FROM integration.tbGroupe as grp
+                                                    join integration.tbUsers as user on grp.userid = user.userId
+                                                    where groupeid = :id;");
+            $stmt->bindParam(':id',$id);
             $stmt->execute();
             $data = [];
             while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){

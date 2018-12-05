@@ -1,13 +1,34 @@
 var map;
 var marqueur = [];
 var event = [];
-function myMap() {
+
+function getLocation() {
+    if(location.protocol == "https:") {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(myMap);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }else{
+        myMap();
+    }
+}
+
+function myMap(position="") {
 //debugger;
-    let mapOptions = {
-        center: new google.maps.LatLng(50.6657, 4.5868),
-        zoom: 14,
-        mapTypeId: google.maps.MapTypeId.HYBRID
-    };
+    if(position =="") {
+        var mapOptions = {
+            center: new google.maps.LatLng(50.6657, 4.5868),
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+    }else{
+        var mapOptions = {
+            center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+    }
 
     map = new google.maps.Map(document.getElementById("map"), mapOptions);
 }
@@ -19,7 +40,7 @@ function addMarker(terrain) {
     }));
     google.maps.event.addListener(marqueur[marqueur.length-1], 'click', function() {
         $('#calendar').fullCalendar('destroy');
-        $('#donne').html(makeTable(terrain))
+        $('#terrain').html(makeTable(terrain))
     });
 }
 function setMapOnAll(map) {
@@ -36,6 +57,7 @@ function deleteMarkers() {
 }
 
 function makeTable(data){
+    $('#terrain').css("display","block");
     if($('#sport').val() == undefined){
         data = JSON.parse(ajax('terrain', {'address':data['address']}));
     }else{
@@ -51,9 +73,13 @@ function makeTable(data){
     let table = "<table class='table table-striped'>";
     let header = "<thead><tr>";
     for (let i in data[0]){
-        header += "<th>"+i+"</th>";
+        if(i == "address"){
+            header += "<th>Adresse</th>";
+        }else {
+            header += "<th>" + i[0].toUpperCase() + i.slice(1) + "</th>";
+        }
     }
-    header += "<th>détail</th>";
+    header += "<th>Détail</th>";
     header += "</tr></thead>";
     let main = "<tbody>";
     for (let y in data){
@@ -68,6 +94,7 @@ function makeTable(data){
 }
 
 function calendar(tId) {
+    $('#terrain').css("display","none");
     $('#calendar').fullCalendar('destroy');
     let data=[];
     $.ajaxSetup({async:false});
@@ -77,6 +104,7 @@ function calendar(tId) {
         defaultView: 'agendaWeek',
         locale: 'fr',
         events: data,
+        height: 300,
         selectable: true,
         select: function(start, end){addEvent(tId, start, end)},
         header: {
@@ -84,7 +112,7 @@ function calendar(tId) {
         },
         customButtons: {
             addEventButton: {
-                text: 'add event...',
+                text: 'Réserver',
                 click: function() {
                         var dateStr = prompt("Enter a date in 'YYYY-MM-DD HH:MM:SS' format");
                         var start = moment(dateStr);

@@ -95,7 +95,7 @@ ul li{
     height: 30%;
 }
 main{
-    background-color: #9596A5;
+    background-color: #BABABA;
     height: auto !important; /* real browsers */
     min-height: 86vh; /* real browsers */
     position: relative;
@@ -120,4 +120,31 @@ footer{
 }
 #slogan{
     font-size: 2em;
+}
+.btn-group-vertical{
+    justify-content: unset;
+}
+.major{
+    text-align: center
+}
+#donne{
+    height:300px;
+}
+#terrain{
+    overflow-y: auto;
+}
+#tbTerrain{
+    max-height: 500px;
+}
+#tbTerrain, #map, #club{
+    margin:0.5em;
+}
+.img-fluid{
+    margin:1em;
+}
+.card-img-top{
+    max-height: 30%;
+}
+.ltamis{
+    max-width: 15em;
 }

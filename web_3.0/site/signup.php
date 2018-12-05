@@ -9,6 +9,21 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <style media="screen">
+      .tab, #userForm, #clubForm {
+        text-align: center;
+      }
+      form {
+          /* Pour le centrer dans la page */
+          margin: 0 auto;
+          width: 55%;
+
+          /* Pour voir les limites du formulaire */
+          padding: 1em;
+          border: 1px solid #CCC;
+          border-radius: 1em;
+      }
+    </style>
 </head>
 <body>
 <main>
@@ -22,59 +37,63 @@
     </div>
     <div id="userForm">
         <div class="card card-body">
+          <fieldset>
+            <legend>Inscription client</legend>
             <form action="assets/php/request.php" method="post" id="inscription-client" class="form-signin">
-                <h2 class="form-signin-heading">Inscription Client</h2>
-
-                <div>
-                    <input name ="nom" placeholder="Nom" type="text" tabindex="1" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name ="nom" placeholder="Nom" type="text" tabindex="1" required autofocus>
                 </div>
-                <div>
-                    <input name="prenom" placeholder="Prénom" type="text" tabindex="2" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="prenom" placeholder="Prénom" type="text" tabindex="2" required autofocus>
                 </div>
-                <div>
-                    Date de naissance : <input name="date" placeholder="Date de naissance" type="date" tabindex="3" required autofocus>
+                <div class="form-group">
+                  <label for="dateNaiss">Date de naissance :</label>
+                    <input class="form-control" id="dateNaiss" name="date" placeholder="Date de naissance" type="date" tabindex="3" required autofocus>
                 </div>
-                <div>
-                    <input name="email" placeholder="Email" type="email" tabindex="4" required>
+                <div class="form-group">
+                    <input class="form-control" name="email" placeholder="Email" type="email" tabindex="4" required>
                 </div>
-                <div>
-                    <input name="pseudo" placeholder="Pseudo" type="text" tabindex="5" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="pseudo" placeholder="Pseudo" type="text" tabindex="5" required autofocus>
                 </div>
-                <div>
-                    <input name="mdp" placeholder="Mot de passe" type="password" tabindex="6" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="mdp" placeholder="Mot de passe" type="password" tabindex="6" required autofocus>
                 </div>
-                <div>
-                    <input name="mdp2" placeholder="Confirmer mot de passe" type="password" tabindex="7" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="mdp2" placeholder="Confirmer mot de passe" type="password" tabindex="7" required autofocus>
                 </div>
-                <div>
-                    <input name="inscription_client" type="submit" id="client-submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+                <div class="form-group">
+                    <input name="inscription_client" type="submit" id="client-submit" class="btn btn-primary" value="Submit">
                 </div>
+              </fieldset>
             </form>
         </div>
     </div>
     <div id="clubForm" class="collapse">
         <div class="card card-body">
             <form action="assets/php/request.php" method="post" id="inscription-club" class="form-signin">
-                <h2 class="form-signin-heading">Inscription Club</h2>
-                <div>
-                    <input name="nom" placeholder="Nom" type="text" tabindex="1" required autofocus>
+              <fieldset>
+                <legend>Inscription Club</legend>
+                <div class="form-group">
+                    <input class="form-control" name="nom" placeholder="Nom" type="text" tabindex="1" required autofocus>
                 </div>
 
-                <div>
-                    <input name="email" placeholder="Email" type="email" tabindex="2">
+                <div class="form-group">
+                    <input class="form-control" name="email" placeholder="Email" type="email" tabindex="2">
                 </div>
-                <div>
-                    <input name="address" placeholder="address" type="text" tabindex="3" autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="address" placeholder="address" type="text" tabindex="3" autofocus>
                 </div>
-                <div>
-                    <input name="mdp" placeholder="Mot de passe" type="password" tabindex="4" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="mdp" placeholder="Mot de passe" type="password" tabindex="4" required autofocus>
                 </div>
-                <div>
-                    <input name="mdp2" placeholder="Confirmer mot de passe" type="password" tabindex="5" required autofocus>
+                <div class="form-group">
+                    <input class="form-control" name="mdp2" placeholder="Confirmer mot de passe" type="password" tabindex="5" required autofocus>
                 </div>
-                <div>
-                    <button name="inscription_club" type="submit" id="club-submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+                <div class="form-group">
+                    <button name="inscription_club" type="submit" id="club-submit" class="btn btn-primary">Submit</button>
                 </div>
+              </fieldset>
             </form>
         </div>
     </div>

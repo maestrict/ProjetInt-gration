@@ -38,9 +38,14 @@ switch (true){
         $iDb = new Db();
         $iDb->makeReservation($_POST['id']);
         break;
-    case($_POST['action'] == 'user'):
+    case($_POST['action'] == 'amis'):
         $iDb = new Db();
-        die(json_encode($iDb->mAmis($_POST['id'] == null?"tout":$_POST['id'])));
+        $out = [];
+        $out[0] = $iDb->mAmis($_POST['id'] == null?"tout":$_POST['id']);
+        if($_POST['id'] != null){
+            array_push($out, $iDb->lookForFriends($_POST['id']));
+        }
+        die(json_encode($out));
         break;
     case($_POST['action'] == 'annonce'):
         $iDb = new Db();
@@ -57,7 +62,11 @@ switch (true){
         break;
     case($_POST['action'] == 'mreserve'):
         $iDb = new Db();
-        die(json_encode($iDb->mreserve()));
+        if($_POST['id'] == "list") {
+            die(json_encode($iDb->mreserve()));
+        }else{
+            die(json_encode($iDb->listGroup($_POST['id'])));
+        }
         break;
     case($_POST['action'] == 'annulerGroupe'):
         $iDb = new Db();
@@ -70,6 +79,13 @@ switch (true){
     case($_POST['action'] == 'club'):
         $iDb = new Db();
         die(json_encode($iDb->getClubs($_POST['id'])));
+        break;
+    case($_POST['action'] == 'lookForFace'):
+        die(lookForFace($_POST['id']));
+        break;
+    case($_POST['action'] == 'addFriend'):
+        $iDb = new Db();
+        $iDb->addFriend($_POST['id']);
         break;
 }
 
@@ -157,4 +173,16 @@ function terrain($choix, $param=[]){
 function data_calendario(){
     $iDb = new Db();
     return $iDb->testReserve();
+}
+
+function lookForFace($name){
+    $extention = ['.jpg', '.png', '.jpeg', '.gif'];
+    $out = "/assets/img/default_profile.jpg";
+    foreach ($extention as $value){
+        $existe = file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/" . (isset($_SESSION['user'])?"user/":"club/").$name.$value);
+        if($existe) {
+            $out = "/uploads/" . (isset($_SESSION['user'])?"user/":"club/").$name.$value;
+        }
+    }
+    return($out);
 }

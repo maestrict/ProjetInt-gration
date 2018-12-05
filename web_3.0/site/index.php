@@ -16,20 +16,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item"><a class="nav-link" href="#">Acceuil</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Recherche terrain</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Recherche partenaire</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Mon Compte</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.php">Acceuil</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.php">Recherche terrain</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.php">Recherche partenaire</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.php">Mon Compte</a></li>
         </ul>
         <div class="btn-group dropleft">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Connexion
+                Login
             </button>
             <div class="dropdown-menu">
                 <form action="assets/php/request.php" class="px-4 py-3 form-signin" id="login" method="post">
                     <div class="form-group">
-                        <label for="pseudo">pseudo</label>
-                        <input type="text" name="pseudo" id="pseudo" class="form-control"  placeholder="pseudo" required>
+                        <label for="pseudo">Pseudo</label>
+                        <input type="text" name="pseudo" id="pseudo" class="form-control"  placeholder="Pseudo" required>
                     </div>
                     <div class="form-group">
                         <label for="mdp">Password</label>
@@ -56,7 +56,7 @@
             <div class="text-center">
                 <h1>MooveGo</h1>
                 <img src="/assets/img/logo_white.png" class="size">
-                <p id="slogan" class="font-italic">Sport anywhere with any body.</p>
+                <p id="slogan" class="font-italic">Sport anywhere with anybody</p>
             </div>
         </div>
     </header>
@@ -66,8 +66,8 @@
         <section id="one" class="wrapper style1 special">
             <div class="inner">
                 <header class="major">
-                    <h2>MooveGo est une application de mise en relation de personnes, ayant pour but de promouvoir les activités sportives à plusieurs.</h2>
-                    <p>MooveGo est une application de mise en relation de personnes, ayant pour but de promouvoir les activités sportives à plusieurs.</p>
+                    <h4>MooveGo est une plateforme permettant aux sportifs de réserver un terrain de Tennis, Badminton, Padel & Squash dans la province du Brabant Wallon. Nous avons pour but de promouvoir les activités sportives à plusieurs.</h4>
+                    <p>MooveGo est également une plateforme permettant de trouver un ou plusieurs partenaire(s) sportif(s) grâce à un système d’annonce simple et pratique.</p>
                 </header>
             </div>
         </section>
@@ -76,7 +76,7 @@
         <h2 class="title">Services</h2>
         <section id="two" class="card-deck mb-3 text-center">
             <div class="card mb-4 shadow-sm">
-                <img class="rounded-circle mx-auto" src="/assets/img/tennis-courts-in-autumn.jpg" alt="Generic placeholder image" width="140" height="140">
+                <img class="rounded-circle mx-auto" src="/assets/img/terrain.jpg" alt="Generic placeholder image" width="140" height="140">
                 <h2>Trouvez un terrain</h2>
                 <p>Grâce à notre système de localisation des clubs et vos critères.</p>
                 <a class="blue btn btn-secondary" href="#" role="button">View details »</a>
@@ -138,25 +138,25 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">
-                                    Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Enter name" required="required" />
+                                    Nom</label>
+                                <input type="text" class="form-control" id="name" placeholder="Nom" required="required" />
                             </div>
                             <div class="form-group">
                                 <label for="email">
-                                    Email Address</label>
+                                    Adresse email</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span>
                                     </span>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter email" required="required" /></div>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" required="required" /></div>
                             </div>
                             <div class="form-group">
                                 <label for="subject">
-                                    Subject</label>
+                                    Sujet</label>
                                 <select id="subject" name="subject" class="form-control" required="required">
-                                    <option value="na" selected="">Choose One:</option>
-                                    <option value="service">General Customer Service</option>
+                                    <option value="na" selected disabled>Choisissez un sujet</option>
+                                    <option value="service">Service client</option>
                                     <option value="suggestions">Suggestions</option>
-                                    <option value="product">Product Support</option>
+                                    <option value="product">Support Produit</option>
                                 </select>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary pull-right" id="btnContactUs">
-                                Send Message</button>
+                                Envoyer</button>
                         </div>
                     </div>
                 </form>

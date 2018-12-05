@@ -24,7 +24,7 @@ require 'assets/php/secure.inc.php';
             <div class="text-center">
                 <h1>MooveGo</h1>
                 <img src="/assets/img/logo_white.png" class="size">
-                <p id="slogan" class="font-italic">Sport anywhere with any body.</p>
+                <p id="slogan" class="font-italic">Sport anywhere with anybody</p>
             </div>
         </div>
     </header>
@@ -34,8 +34,8 @@ require 'assets/php/secure.inc.php';
         <section id="one" class="wrapper style1 special">
             <div class="inner">
                 <header class="major">
-                    <h2>MooveGo est une application de mise en relation de personnes, ayant pour but de promouvoir les activités sportives à plusieurs.</h2>
-                    <p>MooveGo est une application de mise en relation de personnes, ayant pour but de promouvoir les activités sportives à plusieurs.</p>
+                    <h4>MooveGo est une plateforme permettant aux sportifs de réserver un terrain de Tennis, Badminton, Padel & Squash dans la province du Brabant Wallon. Nous avons pour but de promouvoir les activités sportives à plusieurs.</h4>
+                    <p>MooveGo est également une plateforme permettant de trouver un ou plusieurs partenaire(s) sportif(s) grâce à un système d’annonce simple et pratique.</p>
                 </header>
             </div>
         </section>
@@ -44,7 +44,7 @@ require 'assets/php/secure.inc.php';
         <h2 class="title">Services</h2>
         <section id="two" class="card-deck mb-3 text-center">
             <div class="card mb-4 shadow-sm">
-                <img class="rounded-circle mx-auto" src="/assets/img/tennis-courts-in-autumn.jpg" alt="Generic placeholder image" width="140" height="140">
+                <img class="rounded-circle mx-auto" src="/assets/img/terrain.jpg" alt="Generic placeholder image" width="140" height="140">
                 <h2>Trouvez un terrain</h2>
                 <p>Grâce à notre système de localisation des clubs et vos critères.</p>
                 <a class="blue btn btn-secondary" href="#" role="button">View details »</a>
@@ -106,25 +106,25 @@ require 'assets/php/secure.inc.php';
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">
-                                    Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Enter name" required="required" />
+                                    Nom</label>
+                                <input type="text" class="form-control" id="name" placeholder="Nom" required="required" />
                             </div>
                             <div class="form-group">
                                 <label for="email">
-                                    Email Address</label>
+                                    Adresse email</label>
                                 <div class="input-group">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span>
                                     </span>
-                                    <input type="email" class="form-control" id="email" placeholder="Enter email" required="required" /></div>
+                                    <input type="email" class="form-control" id="email" placeholder="Email" required="required" /></div>
                             </div>
                             <div class="form-group">
                                 <label for="subject">
-                                    Subject</label>
+                                    Sujet</label>
                                 <select id="subject" name="subject" class="form-control" required="required">
-                                    <option value="na" selected="">Choose One:</option>
-                                    <option value="service">General Customer Service</option>
+                                    <option value="na" selected disabled>Choisissez un sujet</option>
+                                    <option value="service">Service client</option>
                                     <option value="suggestions">Suggestions</option>
-                                    <option value="product">Product Support</option>
+                                    <option value="product">Support Produit</option>
                                 </select>
                             </div>
                         </div>
@@ -138,7 +138,7 @@ require 'assets/php/secure.inc.php';
                         </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-primary pull-right" id="btnContactUs">
-                                Send Message</button>
+                                Envoyer</button>
                         </div>
                     </div>
                 </form>

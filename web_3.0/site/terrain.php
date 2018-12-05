@@ -30,13 +30,30 @@ $terrains = terrain('get');
             <div class="row">
                 <div class="col-sm">
                     <form method="post" onsubmit="groups(); return false">
-                        <ul>
-                            <input type="text" id="address" placeholder="Localisation"><br>
-                            <input type="text" id="Rayon" placeholder="Rayon (km)"><br>
-                            <input type="text" id="sport" placeholder="sport"><br>
-                            <input type="text" id="nbrParticipants" placeholder="Nombre de personnes"><br>
-                            <input type="submit" name="submit" value="chercher">
-                        </ul>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="address" placeholder="Localisation">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="Rayon" placeholder="Rayon (km)">
+                        </div>
+                        <div class="form-group">
+                            <select id="sport" class="form-control">
+                                <option value="Sport" disabled="" selected="">Sport</option>
+                                <option value="Badminton">Badminton</option>
+                                <option value="Tennis">Tennis</option>
+                                <option value="Padel">Padel</option>
+                                <option value="Squash">Squash</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="Date" class="form-control" id="date">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="nbrParticipants" placeholder="Nombre de personnes">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="blue btn btn-primary" value="Chercher"> <input type="button" name="annuler" class="blue btn btn-primary" value="Annuler" onclick="window.location.reload()">
+                        </div>
                     </form>
                 </div>
                 <div class="col">

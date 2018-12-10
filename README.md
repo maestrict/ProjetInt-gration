@@ -15,3 +15,11 @@ MooveGo est une entreprise que nous, 6 jeunes entrepreneurs sportifs, avons déc
 Nous avons pour mission d’accompagner les sportifs dans leur processus de réservation de terrain en offrant un système en ligne de réservation centralisé, rapide, simple et performant. Aussi, nous voulons les accompagner dans leurs recherches de partenaire de sport grâce à un système de mise en relation. Ce projet provient de deux frustrations que nous avons rencontrées : la difficulté de réservation due à un système en ligne pas assez performant voir inexistant : nous avons par exemple remarqué que plus de la moitié des clubs locaux ne disposent pas de système de réservation en ligne. Et, la difficulté de trouver un partenaire de sport. Notre plateforme est gratuite pour les utilisateurs, donc les sportifs à la recherche d’un terrain et/ou d’un partenaire, mais payante pour les clubs qui veulent mettre leurs terrains à disposition des sportifs.
 
 MooveGo veut rendre la pratique du sport plus accessible et améliorer le quotidien des sportifs. ​ Nous voulons que la société utilise la connectivité au service des relations humaines et propose des solutions adaptées à chacun.
+
+---
+* Gauthier Romers
+* Amélie Dewael
+* Arnaud Maes
+* Aston Janssens
+* Grégory Pyck
+* Sébastien Blacks

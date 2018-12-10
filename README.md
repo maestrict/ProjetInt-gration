@@ -17,9 +17,12 @@ Nous avons pour mission d’accompagner les sportifs dans leur processus de rés
 MooveGo veut rendre la pratique du sport plus accessible et améliorer le quotidien des sportifs. ​ Nous voulons que la société utilise la connectivité au service des relations humaines et propose des solutions adaptées à chacun.
 
 ---
-* Gauthier Romers
-* Amélie Dewael
-* Arnaud Maes
-* Aston Janssens
-* Grégory Pyck
-* Sébastien Blacks
+
+<ul>Marketing :</ul>
+<li> - Gauthier Romers</li>
+<li> - Amélie Dewael</li>
+<li> - Aston Janssens</li>
+<ul>IT :</ul>
+<li> - Arnaud Maes</li>
+<li> - Grégory Pyck</li>
+<li> - Sébastien Blacks</li>

@@ -18,11 +18,12 @@ MooveGo veut rendre la pratique du sport plus accessible et améliorer le quotid
 
 ---
 
-<ul>Marketing :</ul>
+<ul>Marketing</ul>
 <li> - Gauthier Romers</li>
 <li> - Amélie Dewael</li>
 <li> - Aston Janssens</li>
-<ul>IT :</ul>
+
+<ul>IT</ul>
 <li> - Arnaud Maes</li>
 <li> - Grégory Pyck</li>
 <li> - Sébastien Blacks</li>

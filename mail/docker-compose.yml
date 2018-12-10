@@ -1,0 +1,29 @@
+version: '2'
+services:
+  mail:
+    image: tvial/docker-mailserver:latest
+    hostname: moovego.be #only in local
+    domainname: moovego.be #only in local
+    container_name: moovego_be_mail
+    restart: always
+    ports:
+        - "25:25"
+        - "143:143"
+        - "587:587"
+        - "993:993"
+    volumes:
+        # we store everything outside the container to be able to access it without docker (example: for backup)
+        - ./mail/data:/var/mail
+        - ./mail/state:/var/mail-state
+        - ./config:/tmp/docker-mailserver/
+        - ./letsencrypt/etc/letsencrypt:/etc/letsencrypt
+    environment:
+        - ENABLE_SPAMASSASSIN=0 # 1 activate an anti-spam 
+        - ENABLE_CLAMAV=0 # 1 activate the anti-virus
+        - ENABLE_FAIL2BAN=1 # 1 activate Fail2ban (avoid bruteforce attack)
+        - ENABLE_POSTGREY=0 # 1 activate an other anti-spam method (overzealous by default for me)
+        - SSL_TYPE=letsencrypt # indicate we will use let's encrypt
+        - ONE_DIR=1 # put all states in the /var/mail-state directory
+        - DMS_DEBUG=0 # 1 activate the debug mod
+    cap_add:
+        - NET_ADMIN # necessary for fail2ban to work

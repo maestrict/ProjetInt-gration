@@ -87,6 +87,16 @@ switch (true){
         $iDb = new Db();
         $iDb->addFriend($_POST['id']);
         break;
+    case($_POST['action'] == 'horraire'):
+        $iDb = new Db();
+        if(key($_POST['id']) == 'save'){
+            $iDb->horraire('save',$_POST['id']);
+        }elseif(key($_POST['id']) == 'get'){
+            die(json_encode($iDb->horraire('get',$_POST['id'])));
+        }elseif(key($_POST['id']) == 'add'){
+            die($iDb->horraire('add',$_POST['id']));
+        }
+        break;
 }
 
 if(isset($_POST['inscription_client'])){
@@ -99,7 +109,12 @@ if(isset($_POST['inscription_client'])){
     header('location: /acceuil.php');
 }elseif(isset($_POST['login'])){
     $iDB = new Db();
+    if(isset($_POST['remember'])){//cookie
+        setcookie("pseudo",$_POST['pseudo'], time() + (86400 * 10), "/");
+        setcookie("mdp",$_POST['mdp'], time() + (86400 * 10), "/");
+    }
     $iDB->login();
+    //print_r($_POST);
     header('location: /acceuil.php');
 }elseif(isset($_POST['ajoutTerrain'])){
     Terrain('ajout');
@@ -149,6 +164,8 @@ if(isset($_POST['inscription_client'])){
             die("Sorry, there was an error uploading your file.");
         }
     }
+}elseif(isset($_POST['contact'])){
+    mailTo();
 }
 
 function terrain($choix, $param=[]){
@@ -168,11 +185,6 @@ function terrain($choix, $param=[]){
             break;
     }
     return 0;
-}
-
-function data_calendario(){
-    $iDb = new Db();
-    return $iDb->testReserve();
 }
 
 function lookForFace($name){

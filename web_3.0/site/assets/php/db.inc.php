@@ -27,26 +27,26 @@ class Db{
                 : 'vps596525.ovh.net';
     }
 
-    public function login($update = false, $pseudo="")
+    public function login($mode = 0, $pseudo="", $mdp="") //mode 0 = normal, 1 = update, 2 = cookie
     {
-        if (empty($_POST['pseudo']) || empty($_POST['mdp'] && $update == false)) //Oublie d'un champ
+        if ($mode == 0 and (empty($_POST['pseudo']) || empty($_POST['mdp']))) //Oublie d'un champ
         {
-            die('<p>une erreur s\'est produite pendant votre identification.
-    Vous devez remplir tous les champs</p>');
+            echo('<script>window.alert("une erreur s\'est produite pendant votre identification.Vous devez remplir tous les champs");
+                           window.location.href=\'../../index.php\'</script>');
         } else //On check le mot de passe
         {
             $query = $this->iPdo->prepare('SELECT userId, userPseudo, LastName, FirstName, mdp, mail, dateBirth, address, zipCode FROM tbUsers WHERE userPseudo = :pseudo');
-            $query->bindValue(':pseudo', $update == false?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
+            $query->bindValue(':pseudo', $mode == 0?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
             $query->execute();
             $data = $query->fetch(PDO::FETCH_ASSOC);
             if(!$data){//si pas dans la table user => c'est un club
                 $query = $this->iPdo->prepare('SELECT clubId, Name, mail, mdp, address, zipCode FROM tbClub WHERE Name = :pseudo');
-                $query->bindValue(':pseudo', $update == false?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
+                $query->bindValue(':pseudo', $mode == 0?$_POST['pseudo']:$pseudo, PDO::PARAM_STR);
                 $query->execute();
                 $data = $query->fetch(PDO::FETCH_ASSOC);
             }
 
-            if (password_verify($_POST['mdp'], $data['mdp']) || $update == true) // verification du hash mdp!
+            if (password_verify($_POST['mdp']==""?$mdp:$_POST['mdp'], $data['mdp']) || $mode == 1) // verification du hash mdp!
             {
                 if(isset($_SESSION)){//si la session est set
                     session_unset();
@@ -62,7 +62,8 @@ class Db{
                 }
             } else // Acces pas OK !
             {
-                echo("<script>alert('Mot de passe et/ou pseudo incorrect')</script>");
+                echo("<script>window.alert('Mot de passe et/ou pseudo incorrect');
+                            window.location.href='../../index.php'</script>");
             }
             $query->CloseCursor();//fermer la connection
         }
@@ -289,7 +290,7 @@ WHERE userId = :id");
             catch(Exception $e){
                 die("Erreur lors de la query d'update user");
             }
-            $this->login(true, $_POST['pseudo']);
+            $this->login(1, $_POST['pseudo']);
         }else{
             try{
                 $stmt = $this->iPdo->prepare("UPDATE integration.tbClub
@@ -306,7 +307,7 @@ WHERE clubId = :id");
             catch(Exception $e){
                 die("Erreur lors de la query d'update club");
             }
-            $this->login(true, $_POST['nom']);
+            $this->login(1, $_POST['nom']);
         }
     }
 
@@ -526,7 +527,6 @@ WHERE clubId = :id");
             return 1;
         }
         try{
-            $date =date('y/m/d',strtotime($_POST['date']));
             $stmt = $this->iPdo->prepare("insert into integration.tbGroupe(groupeid, userid) 
                                                     values(:groupe, :user);");
             $stmt->bindParam(':groupe',$id);
@@ -550,6 +550,126 @@ WHERE clubId = :id");
             return $data;
         }catch(Exception $e){
             die("Erreur lors de la query");
+        }
+    }
+
+    function horraire($mode,$data=[]){
+        switch($mode){
+            case 'save':
+                //die(json_encode($data));
+                try{
+                    $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
+                    //return($_POST['id']['get']);
+                    if($data['get'] == null){
+                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                    }else{
+                        $stmt->bindParam(':Clubid',$data['get']);
+                    }
+                    $stmt->execute();
+                    $out = [];
+                    while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                        array_push($out, $temp);
+                    }
+                }catch(Exception $e){
+                    die("Erreur lors de la query");
+                }
+                if(isset($out[0]['LundiStart'])){
+                    try{
+                        $appel = 'call supphorraire('.$_SESSION['club']['clubId'].')';
+                        $sth = $this->iPdo->prepare($appel);
+                        $sth->execute();
+                    }catch(PDOException $e){
+                        $this->pdoException = $e;
+                        return ['__ERR__' => $this->getException()];
+                    }
+                }
+                else{
+                    try{
+                        $head=[];
+                        foreach (array_keys($data['save']['start']) as $day){
+                            array_push($head,$day);
+                        }
+                        //die("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End) VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
+                        $stmt = $this->iPdo->prepare("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End)
+                                                        VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
+                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                        foreach($head as $day){
+                            $stmt->bindParam(':'.$day."Start",$data['save']['start'][$day]);
+                        }
+                        foreach($head as $day){
+                            $stmt->bindParam(':'.$day."End",$data['save']['end'][$day]);
+                        }
+                        $stmt->execute();
+                    }catch(Exception $e){
+                        die("Erreur lors de la query");
+                    }
+                }
+            break;
+            case 'get':
+                //die(print_r($data));
+                try{
+                    $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
+                    //return($_POST['id']['get']);
+                    if($data['get'] == null){
+                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                    }else{
+                        $stmt->bindParam(':Clubid',$data['get']);
+                    }
+                    $stmt->execute();
+                    $out = [];
+                    while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                        array_push($out, $temp);
+                    }
+                    return $out;
+                }catch(Exception $e){
+                    die("Erreur lors de la query");
+                }
+            break;
+            case 'add':
+                try{
+                    $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
+                    //return($_POST['id']['get']);
+                    if($data['get'] == null){
+                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                    }else{
+                        $stmt->bindParam(':Clubid',$data['get']);
+                    }
+                    $stmt->execute();
+                    $out = [];
+                    while($temp = $stmt->fetch(PDO::FETCH_ASSOC)){
+                        array_push($out, $temp);
+                    }
+                }catch(Exception $e){
+                    die("Erreur lors de la query");
+                }
+                if(isset($out[0]['LundiStart'])){
+                    try{
+                        $key = array_keys($data['add']);
+                        //return("update integration.tbHorraire set ".$key[0]." = '".$data['add'][$key[0]]."', ".$key[1]." = '".$data['add'][$key[1]]."' where Clubid = ".$_SESSION['club']['clubId'].";");
+                        $stmt = $this->iPdo->prepare("update integration.tbHorraire set ".$key[0]." = '".$data['add'][$key[0]]."', ".$key[1]." = '".$data['add'][$key[1]]."' where Clubid = ".$_SESSION['club']['clubId'].";");
+                        //$stmt = $this->iPdo->prepare("update integration.tbHorraire set :day1 = :value1, :day2 = :value2 where Clubid = :Clubid;");
+                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                        $stmt->bindParam(':day1',$key[0]);
+                        $stmt->bindParam(':value1',$data['add'][$key[0]]);
+                        $stmt->bindParam(':day2',$key[1]);
+                        $stmt->bindParam(':value2',$data['add'][$key[1]]);
+                        $stmt->execute();
+                    }catch(Exception $e){
+                        die("Erreur lors de la query");
+                    }
+                }else{
+                    $conv=[];
+                    if(strpos(array_keys($data['add'])[0],'Start')){
+                        $conv['start'][substr(array_keys($data['add'])[0],0,-5)] = $data['add'][array_keys($data['add'])[0]];
+                        $conv['end'][substr(array_keys($data['add'])[1],0,-3)] = $data['add'][array_keys($data['add'])[1]];
+                    }else{
+                        $conv['start'][substr(array_keys($data['add'])[1],0,-3)] = $data['add'][array_keys($data['add'])[1]];
+                        $conv['end'][substr(array_keys($data['add'])[0],0,-5)] = $data['add'][array_keys($data['add'])[0]];
+                    }
+                    //die(json_encode($conv));
+                    $this->horraire('save',array("save"=>$conv));
+                }
+                break;
         }
     }
 }

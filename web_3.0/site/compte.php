@@ -9,8 +9,8 @@ if(isset($_SESSION['club'])) {
 }
 $iDB = new Db();
 ?>
-<!DOCKTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <title>Compte</title>
     <meta name="viewport" content="width=device-width , initial-scale=1" />
@@ -41,11 +41,15 @@ $iDB = new Db();
                 ?>
                 </span><br>
                 <input type="button" class="btn btn-outline-secondary" value="Mon profil" onclick="load('contain', 'profil')"><br>
-                <input type="button" class="btn btn-outline-secondary" value="Mes réservations" onclick="load('contain', 'reserve')"><br>
+                <?php
+                if(isset($_SESSION['club'])){
+                    echo("<input type='button' class='btn btn-outline-secondary' value='Mes réservations' onclick=\"load('contain', 'reserve')\"><br>");
+                }
+                ?>
                 <input type="button" class="btn btn-outline-secondary" value="Mes partenaires" onclick="load('contain', 'partenaire')"><br>
                 <?php
                 if(isset($_SESSION['club'])){
-                    echo("<input type=\"button\" class=\"btn btn-outline-primary\" value=\"Mes Terrains\" onclick=\"load('contain', 'possession')\"><br>");
+                    echo("<input type=\"button\" class=\"btn btn-outline-primary\" value=\"Mes Terrains\" onclick=\"location.href='/possession.php';\"><br>");
                 }
                 ?>
             </div>

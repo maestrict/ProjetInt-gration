@@ -2,22 +2,6 @@
 session_start();
 require_once('request.php');
 ?>
-<script>
-    $(function() {
-        $( "#zipCode" ).autocomplete({
-            source: function( request, response ) {
-                $.ajax({
-                    url: "/assets/php/request.php",
-                    type:'post',
-                    data: {"autocomplete":"1"},
-                    success: function(data) {
-                        console.log(data);
-                    }
-                });
-            },
-        });
-    });
-</script>
 <h4>Voici les données de votre compte</h4>
 <div class="row">
     <div class="col">
@@ -106,44 +90,54 @@ EOT;
             $form = <<<EOT
                                     <table>
                                         <tr>
+                                        <div class="form-group">
                                             <td>
                                                 <label for="nom">Nom: </label>
                                             </td>
                                             <td>
-                                                <input type="text" name="nom" id="nom" placeholder="Nom" value="{$_SESSION['club']['Name']}" maxlength="20" required>
+                                                <input class="form-control" type="text" name="nom" id="nom" placeholder="Nom" value="{$_SESSION['club']['Name']}" maxlength="20" required>
                                             </td>
+                                            </div>
                                         </tr>
                                         <tr>
+                                        <div class="form-group">
                                             <td>
                                                 <label for="tel">Telephone: </label>
                                             </td>
                                             <td>
-                                                <input type="text" name="tel" id="tel" placeholder="Téléphone" value="{$_SESSION['club']['telephone']}" maxlength="50">
+                                                <input class="form-control" type="text" name="tel" id="tel" placeholder="Téléphone" value="{$_SESSION['club']['telephone']}" maxlength="50">
                                             </td>
+                                            </div>
                                         </tr>
                                         <tr>
+                                        <div class="form-group">
                                             <td>
                                                 <label for="email">Mail: </label>
                                             </td>
                                             <td>
-                                                <input type="text" name="email" id="email" placeholder="Email" value="{$_SESSION['club']['mail']}" maxlength="25" required>
+                                                <input class="form-control" type="text" name="email" id="email" placeholder="Email" value="{$_SESSION['club']['mail']}" maxlength="25" required>
                                             </td>
+                                            </div>
                                         </tr>
                                         <tr>
+                                        <div class="form-group">
                                             <td>
                                                 <label for="address">Adresse: </label>
                                             </td>
                                             <td>
-                                                <input type="text" name="address" id="address" placeholder="Addresse" value="{$_SESSION['club']['address']}">
+                                                <input class="form-control" type="text" name="address" id="address" placeholder="Addresse" value="{$_SESSION['club']['address']}">
                                             </td>
+                                            </div>
                                         </tr>
                                         <tr>
+                                        <div class="form-group">
                                             <td>
                                                 <label for="zipCode">Code Postal:</label>
                                             </td>
                                             <td>
-                                                <input type="text" name="zipCode" id="zipCode" placeholder="0" value="{$_SESSION['club']['zipCode']}">
+                                                <input class="form-control" type="text" name="zipCode" id="zipCode" placeholder="0" value="{$_SESSION['club']['zipCode']}">
                                             </td>
+                                            </div>
                                         </tr>
                                     </table>
 EOT;

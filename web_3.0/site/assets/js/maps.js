@@ -64,7 +64,6 @@ function makeTable(data){
         data = JSON.parse(ajax('terrain', {'spec':[data['address'], data['sport']]}));
     }
     for (let i in data) { // supprimer les infos inutiles pour l'utilisateur
-        delete data[i]['clubId'];
         delete data[i]['sId'];
         delete data[i]['description'];
         delete data[i]['latitude'];
@@ -87,13 +86,13 @@ function makeTable(data){
         for (let x in data[y]) {
             main += "<td>" + data[y][x] + "</td>";
         }
-        main += "<td><input type='button' value='horaire' onclick='calendar("+data[y]['tId']+")'></td></tr>";
+        main += "<td><input type='button' value='horaire' onclick='calendar("+data[y]['clubId']+", "+data[y]['tId']+")'></td></tr>";
     }
     main += "</tbody>";
     return table+header+main;
 }
 
-function calendar(tId) {
+function calendar(clubId, tId) {
     $('#terrain').css("display","none");
     $('#calendar').fullCalendar('destroy');
     let data=[];
@@ -105,7 +104,10 @@ function calendar(tId) {
         locale: 'fr',
         events: data,
         height: 300,
+        businessHours: getBusiness(clubId),
         selectable: true,
+        selectOverlap: false,
+        selectConstraint:"businessHours",
         select: function(start, end){addEvent(tId, start, end)},
         header: {
             center: 'addEventButton'
@@ -148,6 +150,7 @@ function reserve(){
     $("#dialog").dialog("close");
     eventData = {
         title: "",
+        locale: 'fr',
         start: event[0],
         end: event[1],
         overlap: false

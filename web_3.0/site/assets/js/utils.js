@@ -99,7 +99,7 @@ function makeCard(data){
     out += "<div class='col'>";
     out += "Localisation: "+ data['address']+"<br>";
     out += "Sport: "+ data['sport']+"<br>";
-    out += "<input type='button' name='join' class='blue btn btn-primary' value='rejoindre' onclick='rejoindre(\""+data['idgroupe']+"\")'>";
+    out += "<input type='button' name='join' class='blue btn btn-primary' value='Rejoindre' onclick='rejoindre(\""+data['idgroupe']+"\")'>";
     out += "</div>";
     out += "</div>";
     out += "";
@@ -199,7 +199,7 @@ function annuler(id){
 }
 
 function changeDonnee(){
-    if($('#prenom')){
+    if($('#prenom').length > 0){
         let cle = ['nom', 'prenom', 'pseudo', 'date', 'email', 'address', 'zipCode'];
         let data = [];
         for(i in cle){
@@ -213,7 +213,7 @@ function changeDonnee(){
         // console.log(data);
         ajax('update', data);
     }else{
-        let cle = ['nom', 'telephone', 'email', 'address', 'zipCode'];
+        let cle = ['nom', 'tel', 'email', 'address', 'zipCode'];
         let data = [];
         for(i in cle){
             //console.log($('#'+cle[i]).val());
@@ -296,4 +296,54 @@ function format(date, format){
         }
     });
     return out.join('-');
+}
+
+function horraire(){
+    let day = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    var start = new Object();
+    var end = new Object();
+    for(let i in day){
+        start[day[i]] = $('#'+day[i]+"start").val();
+    }
+    for(let i in day){
+        end[day[i]] = $('#'+day[i]+"end").val();
+    }
+    //console.log({'save':{'start':start,'end':end}});
+    var test = ajax('horraire',{'save':{'start':start,'end':end}});
+    //console.log(test);
+    $('#calendar').fullCalendar('destroy');
+    $('#calendar').fullCalendar({
+        defaultView: 'agendaWeek',
+        locale: 'fr',
+        firstDay:1,
+        height:600,
+        businessHours: getBusiness(),
+        selectable: true,
+        selectOverlap: false,
+        select: function(start, end){test(start, end)}
+    });
+}
+
+function validateHhMm(inputField) {
+    var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
+
+    if (isValid) {
+        inputField.style.backgroundColor = '#bfa';
+    } else {
+        inputField.style.backgroundColor = '#fba';
+    }
+
+    return isValid;
+}
+
+function getBusiness(clubId = null){
+    let data = JSON.parse(ajax('horraire',{'get':clubId}));
+    //console.log(data);
+    let day = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    let out = [];
+    if(data.length == 0) return true;
+    for(let index in day){
+        out.push({dow:[parseInt(index)], start: data[0][day[index]+"Start"], end: data[0][day[index]+"End"]});
+    }
+    return out;
 }

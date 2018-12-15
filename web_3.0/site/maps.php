@@ -7,7 +7,7 @@ require 'assets/php/secure.inc.php';
 $terrains = terrain('get');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <title>Recherche Terrain</title>
     <meta charset="utf-8" />

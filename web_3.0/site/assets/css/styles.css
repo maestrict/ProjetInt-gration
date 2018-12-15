@@ -8,6 +8,9 @@
     background-repeat: no-repeat;
     background-size: cover;
 }*/
+body.viewport-lg {
+position: absolute;
+}
 .form-signin {
     width: 100%;
     max-width: 330px;
@@ -42,7 +45,7 @@ ul li{
     display: inline;
 }
 .jumbotron{
-    background-image: url("../img/balle2.jpg");
+    /*background-image: url("../img/balletest.webp");*/
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -53,6 +56,14 @@ ul li{
     background-position-x: right;*/
     color: whitesmoke;
 }
+.no-webp .image {
+    background-image: url('../img/balle2.jpg');
+}
+
+.webp .image {
+    background-image: url('../img/balletest.webp');
+}
+
 #map{
     width:500px;
     height:500px;
@@ -92,10 +103,10 @@ ul li{
     padding:1em;
 }
 .size{
-    height: 30%;
+    height: 25em;
 }
 main{
-    background-color: #BABABA;
+    background-color: dodgerblue; /*#BABABA*/
     height: auto !important; /* real browsers */
     min-height: 86vh; /* real browsers */
     position: relative;
@@ -132,9 +143,7 @@ footer{
 }
 #terrain{
     overflow-y: auto;
-}
-#tbTerrain{
-    max-height: 500px;
+    max-height: 300px;
 }
 #tbTerrain, #map, #club{
     margin:0.5em;
@@ -147,4 +156,27 @@ footer{
 }
 .ltamis{
     max-width: 15em;
+}
+#listAnnonces{
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.label{
+    color:whitesmoke;
+}
+@media only screen and (min-width : 575px) {
+    #dropdownMenu2 {
+        display: inline;
+    }
+    #mobile {
+        display: none;
+    }
+}
+@media only screen and (max-width : 576px) {
+    #dropdownMenu2 {
+        display: none;
+    }
+    #mobile {
+        display: inline;
+    }
 }

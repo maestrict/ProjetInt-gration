@@ -1,6 +1,6 @@
 <?php
-require_once ('db.inc.php');
-switch (true){
+require_once ('db.inc.php');  // db
+switch (true){  // appelle ajax
     case($_POST['action'] == 'login'):
         $iDB = new Db();
         $iDB->Login();
@@ -99,6 +99,7 @@ switch (true){
         break;
 }
 
+// post
 if(isset($_POST['inscription_client'])){
     $iDB = new Db();
     $iDB->inscription_client();
@@ -168,7 +169,7 @@ if(isset($_POST['inscription_client'])){
     mailTo();
 }
 
-function terrain($choix, $param=[]){
+function terrain($choix, $param=[]){  //fonction pour ajouter, supprimer, retourner un terrain
     $iDB = new Db();
     switch ($choix){
         case('supp'):
@@ -187,7 +188,7 @@ function terrain($choix, $param=[]){
     return 0;
 }
 
-function lookForFace($name){
+function lookForFace($name){  // recherche l'image correspondant a l'utilisateur
     $extention = ['.jpg', '.png', '.jpeg', '.gif'];
     $out = "/assets/img/default_profile.jpg";
     foreach ($extention as $value){

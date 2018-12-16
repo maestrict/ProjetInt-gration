@@ -10,11 +10,19 @@
 <footer class="footer bg-dark">
     <ul class="icons">
         <li><a href="https://www.facebook.com/moovego.be/" target="_blank" rel="noreferrer" class="icon fa-facebook">
-                <img id="comp-ihovpm450imageimageimage" alt="Facebook - White Circle" data-type="image" style="width: 32px; height: 32px; object-fit: cover;"
-                     src="https://static.wixstatic.com/media/e0678ef25486466ba65ef6ad47b559e1.png/v1/fill/w_40,h_40,al_c,q_80,usm_0.66_1.00_0.01/e0678ef25486466ba65ef6ad47b559e1.webp"></a></li>
+                <picture>
+                    <source srcset="/assets/img/facebook.webp" type="image/webp" sizes="32px">
+                    <source srcset="/assets/img/facebook.png" type="image/jpeg" sizes="32px">
+                    <img src="/assets/img/facebook.png" alt="facebook" width="32" height="32">
+                </picture>
+            </a></li>
         <li><a href="https://www.instagram.com/moovego.be/" target="_blank" rel="noreferrer" class="icon fa-instagram">
-                <img id="comp-ihovpm451imageimageimage" alt="Instagram - White Circle" data-type="image" style="width: 32px; height: 32px; object-fit: cover;"
-                     src="https://static.wixstatic.com/media/17f992598001435083075924d7b6ae80.png/v1/fill/w_40,h_40,al_c,q_80,usm_0.66_1.00_0.01/17f992598001435083075924d7b6ae80.webp"></a></li>
+                <picture>
+                    <source srcset="/assets/img/instagram.webp" type="image/webp" sizes="32px">
+                    <source srcset="/assets/img/instagram.png" type="image/jpeg" sizes="32px">
+                    <img src="/assets/img/instagram.png" alt="instagram" width="32" height="32">
+                </picture>
+            </a></li>
         <li><a href="/acceuil.php" class="icon fa-envelope-o"><span class="label">Contact</span></a></li>
     </ul>
 </footer>

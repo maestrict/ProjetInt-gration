@@ -27,6 +27,7 @@ class Db{
                 : 'vps596525.ovh.net';
     }
 
+    // fonction pour se logger sur la plateforme de plusieurs manières
     public function login($mode = 0, $pseudo="", $mdp="") //mode 0 = normal, 1 = update, 2 = cookie
     {
         if ($mode == 0 and (empty($_POST['pseudo']) || empty($_POST['mdp']))) //Oublie d'un champ
@@ -69,6 +70,7 @@ class Db{
         }
     }
 
+    // fonction pour inscrire un client
     public function inscription_client(){
         try{
             $date =date('y/m/d',strtotime($_POST['date']));// format de date
@@ -84,12 +86,12 @@ class Db{
         }catch(Exception $e){
             die("Erreur lors de la query");
         }
-        $this->login();
+        $this->login();  // après on le log automatiquement
     }
 
+    // fonction pour inscrire un nouveau club
     public function inscription_club(){
         try{
-            $date =date('y/m/d',strtotime($_POST['date'])); // format de date
             $stmt = $this->iPdo->prepare("INSERT INTO tbClub(Name, mail,Address, mdp, dateInscription) VALUES(:Name, :mail, :address, :mdp, :inscription)");
             $stmt->bindParam(':Name',$_POST['nom']);
             $stmt->bindParam(':mail',$_POST['email']);
@@ -103,13 +105,14 @@ class Db{
         }
     }
 
+    // fonction retournant une liste de terrains en fonction de parametres
     public function getTerrains($where=[]){
         try{
             $stmt = $this->iPdo->prepare("SELECT tId, Ter.clubId, Name, Ter.sId, Ter.address, sport, description, latitude, longitude 
                                                     FROM integration.tbTerrains as Ter
                                                     join integration.tbSport as Sp ON Ter.sId = Sp.sId
                                                     join integration.tbClub as Cl on Ter.clubId = Cl.clubId");
-            if(is_array($where)){
+            if(is_array($where)){  // si il y a des parametres
                 switch (key($where)){
                     // selection d'un club
                     case('club'):$stmt = $this->iPdo->prepare("SELECT tId, Ter.clubId, Name, Ter.sId, Ter.address, sport, description, latitude, longitude 
@@ -197,7 +200,7 @@ class Db{
         }
     }
 
-    //
+    // supprimer un terrain
     public function suppTerrains($id){
         try{
             $appel = 'call suppTerrain('.$id.')';
@@ -209,6 +212,7 @@ class Db{
         }
     }
 
+    // retourne les données d'un sport
     public function getSport(){
         try{
             $stmt = $this->iPdo->prepare("SELECT sId, sport, description
@@ -224,9 +228,9 @@ class Db{
         }
     }
 
+    //ajouter un sport dans la db
     public function addSport(){
         try{
-            $date =date('y/m/d',strtotime($_POST['date']));
             $stmt = $this->iPdo->prepare("insert into integration.tbSport(sport, description) 
                                                     values(:sport, :description);");
             $stmt->bindParam(':sport',$_POST['sport']);
@@ -238,6 +242,7 @@ class Db{
         }
     }
 
+    // supprimer un sport
     public function suppSport($id){
         try{
             $appel = 'call suppSport('.$id.')';
@@ -249,10 +254,11 @@ class Db{
         }
     }
 
+    // retourne une liste de clubs en fonction de leur id
     public function getClubs($id){
         try{
-            $stmt = $this->iPdo->prepare("select * from tbClub
-                                                    left join cities as city on zipCode = city.zip
+            $stmt = $this->iPdo->prepare("select Name, Address as adresse, mail, telephone, ville from tbClub
+                                                   left join cities as city on zipCode = city.zip
                                                    Where clubId IN (".implode(',', $id).") ");
             $stmt->execute();
             $data = [];
@@ -265,8 +271,9 @@ class Db{
         }
     }
 
+    // update les infos du compte de l'utilisateurs
     public function update($data){
-        if(sizeof($data)>6){
+        if(sizeof($data)>6){  // si c'est un sportif
             try{
                 $stmt = $this->iPdo->prepare("UPDATE integration.tbUsers
 SET userPseudo = :pseudo, LastName = :lastName, FirstName = :firstName, address = :address, zipCode = :zipCode, mail = :mail, dateBirth = :birth
@@ -290,8 +297,8 @@ WHERE userId = :id");
             catch(Exception $e){
                 die("Erreur lors de la query d'update user");
             }
-            $this->login(1, $_POST['pseudo']);
-        }else{
+            $this->login(1, $_POST['pseudo']);  // actualiser les infos dans la variable session
+        }else{  // sinon c'est un club
             try{
                 $stmt = $this->iPdo->prepare("UPDATE integration.tbClub
 SET Name = :Name, Address = :address, zipCode = :zipCode, mail = :mail, telephone = :telephone
@@ -307,10 +314,11 @@ WHERE clubId = :id");
             catch(Exception $e){
                 die("Erreur lors de la query d'update club");
             }
-            $this->login(1, $_POST['nom']);
+            $this->login(1, $_POST['nom']);  // actualiser les infos dans la variable session
         }
     }
 
+    // liste des reservations
     function Reserve($tId){
         try{
             $stmt = $this->iPdo->prepare("SELECT id, idTerrain, startDate as start, finDate as end
@@ -329,6 +337,7 @@ WHERE clubId = :id");
         }
     }
 
+    // faire une resevation
     function makeReservation($data){
         try{
             $grid = explode(" ", $data['start'])[1].explode("-", explode(" ", $data['start'])[0])[2].explode("-", explode(" ", $data['start'])[0])[1].$data['id'].$_SESSION['user']['userId'];
@@ -352,6 +361,7 @@ WHERE clubId = :id");
         }
     }
 
+    // liste les infos de ses reservations
     function mreserve(){
         try{
             $stmt = $this->iPdo->prepare("SELECT cpt.userid, cpt.groupeid, idTerrain, startDate, finDate, ter.sId, address, sport
@@ -373,8 +383,9 @@ WHERE clubId = :id");
         }
     }
 
+    // sortir d'un groupe pour une reservation
     function annuGroupe($id){
-        try{
+        try{  // nombre de personne dans le groupe
             $stmt = $this->iPdo->prepare("select * from tbGroupe where groupeid = :id;");
             $stmt->bindParam(':id',$id);
             $stmt->execute();
@@ -395,7 +406,7 @@ WHERE clubId = :id");
             $this->pdoException = $e;
             return ['__ERR__' => $this->getException()];
         }
-        if(count($data)<2){
+        if(count($data)<2){ // si il n'y avait plus que 1 personne dans le groupe (sois) alors on supprime la reservation
             try{
                 $appel = "call suppReserve(\"{$id}\")";
                 //return $appel;
@@ -409,15 +420,16 @@ WHERE clubId = :id");
         die("suppression reussie");
     }
 
+    // recherche dans ses amis
     function mAmis($name){
         try{
-            if($name == "tout"){
+            if($name == "tout"){  // si on veut lister tout ses amis
                 $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName, userPseudo, dateBirth
                                                     FROM integration.friend as fr
                                                     join integration.tbUsers as user on fr.friendid = user.userid
                                                     WHERE fr.userid = :id;");
                 $stmt->bindParam(':id',$_SESSION['user']['userId']);
-            }else {
+            }else {  // si on recherche un amis précis
                 $stmt = $this->iPdo->prepare("SELECT relid, fr.userid,  FirstName, userPseudo, dateBirth
                                                     FROM integration.friend as fr
                                                     join integration.tbUsers as user on fr.friendid = user.userid
@@ -437,6 +449,7 @@ WHERE clubId = :id");
         }
     }
 
+    // recherche d'une personne hors de ses amis ------------------------
     function lookForFriends($name){
         try{
             $stmt = $this->iPdo->prepare("select * 
@@ -454,6 +467,7 @@ WHERE clubId = :id");
         }
     }
 
+    // ajouter une personne dans ses amis
     function addFriend($id){
         try{
             $stmt = $this->iPdo->prepare("INSERT INTO integration.friend(userid, friendid)
@@ -467,6 +481,7 @@ WHERE clubId = :id");
         $this->login();
     }
 
+    // retourne les données d'un groups ayant de la places de libres
     function groups(){
         try{
             $stmt = $this->iPdo->prepare("SELECT id, nbrParticipants, groupeid, inscrit, idTerrain, startDate, finDate, idgroupe, ter.sId, address, sport
@@ -489,6 +504,7 @@ WHERE clubId = :id");
         }
     }
 
+    // recherche groups avec un id precis
     function listGroup($id){
         try{
             $stmt = $this->iPdo->prepare("SELECT * 
@@ -508,8 +524,9 @@ WHERE clubId = :id");
         }
     }
 
+    // inscription à un groupe
     function inscGroups($id){
-        try{
+        try{  // liste les utilisateurs du groups
             $stmt = $this->iPdo->prepare("select userid
                                                    from integration.tbGroupe
                                                    where groupeid = :id;");
@@ -523,7 +540,7 @@ WHERE clubId = :id");
         catch(Exception $e){
             die("Erreur lors de la query");
         }
-        if(in_array($_SESSION['user']['userId'], $data)){
+        if(in_array($_SESSION['user']['userId'], $data)){  // si déjà dans le groupe
             return 1;
         }
         try{
@@ -539,7 +556,8 @@ WHERE clubId = :id");
         return 0;
     }
 
-    function getCity(){
+
+    /*function getCity(){
         try{
             $stmt = $this->iPdo->prepare("select ville from integration.cities");
             $stmt->execute();
@@ -551,13 +569,13 @@ WHERE clubId = :id");
         }catch(Exception $e){
             die("Erreur lors de la query");
         }
-    }
+    }*/
 
+    //fonction gérant l'horraire des clubs avec parametres save, get, add
     function horraire($mode,$data=[]){
         switch($mode){
             case 'save':
-                //die(json_encode($data));
-                try{
+                try{  // liste si il y a un horraire déjà enregistré
                     $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
                     //return($_POST['id']['get']);
                     if($data['get'] == null){
@@ -573,7 +591,7 @@ WHERE clubId = :id");
                 }catch(Exception $e){
                     die("Erreur lors de la query");
                 }
-                if(isset($out[0]['LundiStart'])){
+                if(isset($out[0]['LundiStart'])){  // si un horraire est déjà enregistré on le supprime
                     try{
                         $appel = 'call supphorraire('.$_SESSION['club']['clubId'].')';
                         $sth = $this->iPdo->prepare($appel);
@@ -583,33 +601,29 @@ WHERE clubId = :id");
                         return ['__ERR__' => $this->getException()];
                     }
                 }
-                else{
-                    try{
-                        $head=[];
-                        foreach (array_keys($data['save']['start']) as $day){
-                            array_push($head,$day);
-                        }
-                        //die("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End) VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
-                        $stmt = $this->iPdo->prepare("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End)
-                                                        VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
-                        $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
-                        foreach($head as $day){
-                            $stmt->bindParam(':'.$day."Start",$data['save']['start'][$day]);
-                        }
-                        foreach($head as $day){
-                            $stmt->bindParam(':'.$day."End",$data['save']['end'][$day]);
-                        }
-                        $stmt->execute();
-                    }catch(Exception $e){
-                        die("Erreur lors de la query");
+                try{
+                    $head=[];
+                    foreach (array_keys($data['save']['start']) as $day){  // recupere les jours de la semaine enregistré dans les clés
+                        array_push($head,$day);
                     }
+                    //die("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End) VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
+                    $stmt = $this->iPdo->prepare("INSERT INTO integration.tbHorraire(Clubid, ".join("Start, ", $head)."Start, ".join("End, ", $head)."End)
+                                                        VALUES(:Clubid, :".join("Start, :", $head)."Start, :".join("End, :", $head)."End);");
+                    $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
+                    foreach($head as $day){
+                        $stmt->bindParam(':'.$day."Start",$data['save']['start'][$day]);
+                    }
+                    foreach($head as $day){
+                        $stmt->bindParam(':'.$day."End",$data['save']['end'][$day]);
+                    }
+                    $stmt->execute();
+                }catch(Exception $e){
+                    die("Erreur lors de la query");
                 }
             break;
             case 'get':
-                //die(print_r($data));
-                try{
+                try{  // retourne l'horraire du club
                     $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
-                    //return($_POST['id']['get']);
                     if($data['get'] == null){
                         $stmt->bindParam(':Clubid',$_SESSION['club']['clubId']);
                     }else{
@@ -626,7 +640,7 @@ WHERE clubId = :id");
                 }
             break;
             case 'add':
-                try{
+                try{  // liste l'horraire du club
                     $stmt = $this->iPdo->prepare("select * from tbHorraire where Clubid = :Clubid");
                     //return($_POST['id']['get']);
                     if($data['get'] == null){
@@ -642,7 +656,7 @@ WHERE clubId = :id");
                 }catch(Exception $e){
                     die("Erreur lors de la query");
                 }
-                if(isset($out[0]['LundiStart'])){
+                if(isset($out[0]['LundiStart'])){  // si il existe on ajoute les données en plus
                     try{
                         $key = array_keys($data['add']);
                         //return("update integration.tbHorraire set ".$key[0]." = '".$data['add'][$key[0]]."', ".$key[1]." = '".$data['add'][$key[1]]."' where Clubid = ".$_SESSION['club']['clubId'].";");
@@ -657,9 +671,9 @@ WHERE clubId = :id");
                     }catch(Exception $e){
                         die("Erreur lors de la query");
                     }
-                }else{
+                }else{ // sinon on cré l'horraire
                     $conv=[];
-                    if(strpos(array_keys($data['add'])[0],'Start')){
+                    if(strpos(array_keys($data['add'])[0],'Start')){ // modification de l'object en parametres pour convenir au format demandé
                         $conv['start'][substr(array_keys($data['add'])[0],0,-5)] = $data['add'][array_keys($data['add'])[0]];
                         $conv['end'][substr(array_keys($data['add'])[1],0,-3)] = $data['add'][array_keys($data['add'])[1]];
                     }else{
@@ -667,7 +681,7 @@ WHERE clubId = :id");
                         $conv['end'][substr(array_keys($data['add'])[0],0,-5)] = $data['add'][array_keys($data['add'])[0]];
                     }
                     //die(json_encode($conv));
-                    $this->horraire('save',array("save"=>$conv));
+                    $this->horraire('save',array("save"=>$conv));  // appele récursif de cette fonction en mode save
                 }
                 break;
         }

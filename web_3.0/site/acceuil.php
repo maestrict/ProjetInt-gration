@@ -17,7 +17,7 @@ require 'assets/php/secure.inc.php';
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body onload="getEvent('terrain')">
+<body>
 <?php
     require 'assets/php/menu.inc.php';
 ?>
@@ -101,7 +101,7 @@ require 'assets/php/secure.inc.php';
 
 
 
-                    Ce projet provient de deux frustrations que nous avons rencontrées : la difficulté de réservation due à un système en ligne pas assez performant voir inexistant : nous avons par exemple remarqué que plus de la moitié des clubs locaux ne disposent pas de système de réservation en ligne. Et, la difficulté de trouver un partenaire de sport.
+                    Ce projet provient de deux frustrations que nous avons rencontrées : la difficulté de réservation due à un système en ligne pas assez performant voire inexistant : nous avons par exemple remarqué que plus de la moitié des clubs locaux ne dispose pas de système de réservation en ligne. Et, la difficulté de trouver un partenaire de sport.
 
 
 
@@ -115,7 +115,7 @@ require 'assets/php/secure.inc.php';
         </section>
         <div class="bg-light contact index">
             <div class="well well-sm">
-                <form action="assets/php/request.php" class="contact" id="contact" method="post">
+                <form action="assets/php/request.php" class="contact" id="form_contact" method="post">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <head>
     <title>Inscription</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width , initial-scale=1" />
+    <meta name="theme-color" content="#317EFB"/>
+    <meta name="Description" content="Page pour s'inscrire sur le site">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/utils.js"></script>

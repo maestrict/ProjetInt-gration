@@ -3,29 +3,28 @@ var marqueur = [];
 var event = [];
 
 function getLocation() {
-    if(location.protocol == "https:") {
+    if(location.protocol == "https:") {  // si le protocol est https alors on regarde la géolocalisation
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(myMap);
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }else{
-        myMap();
+        myMap(); // sans géolocalisation
     }
 }
 
 function myMap(position="") {
-//debugger;
-    if(position =="") {
+    if(position == "") { // si pas de position donnée, default louvain la neuve
         var mapOptions = {
             center: new google.maps.LatLng(50.6657, 4.5868),
-            zoom: 14,
+            zoom: 12,
             mapTypeId: google.maps.MapTypeId.HYBRID
         };
-    }else{
+    }else{ // si on a recupérer des coordonées on centre la carte dessus
         var mapOptions = {
             center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-            zoom: 14,
+            zoom: 12,
             mapTypeId: google.maps.MapTypeId.HYBRID
         };
     }
@@ -39,7 +38,7 @@ function addMarker(terrain) {
         map: map
     }));
     google.maps.event.addListener(marqueur[marqueur.length-1], 'click', function() {
-        $('#calendar').fullCalendar('destroy');
+        $('#calendar').fullCalendar('destroy'); // pour etre sur que des parametres de fullcalendar ne soit plus là
         $('#terrain').html(makeTable(terrain))
     });
 }
@@ -48,16 +47,16 @@ function setMapOnAll(map) {
         marqueur[i].setMap(map);
     }
 }
-function clearMarkers() {
+function clearMarkers() { // efface tout les markers
     setMapOnAll(null);
 }
-function deleteMarkers() {
+function deleteMarkers() { // supprime tout les markers
     clearMarkers();
     marqueur = [];
 }
 
 function makeTable(data){
-    $('#terrain').css("display","block");
+    $('#terrain').css("display","block"); // affiche un tableau avec la liste des terrains du club
     if($('#sport').val() == undefined){
         data = JSON.parse(ajax('terrain', {'address':data['address']}));
     }else{
@@ -74,7 +73,8 @@ function makeTable(data){
     for (let i in data[0]){
         if(i == "address"){
             header += "<th>Adresse</th>";
-        }else {
+        }else if(i == "clubId"){
+        } else {
             header += "<th>" + i[0].toUpperCase() + i.slice(1) + "</th>";
         }
     }
@@ -84,7 +84,10 @@ function makeTable(data){
     for (let y in data){
         main += "<tr>";
         for (let x in data[y]) {
-            main += "<td>" + data[y][x] + "</td>";
+            if(x == "clubId"){
+            }else {
+                main += "<td>" + data[y][x] + "</td>";
+            }
         }
         main += "<td><input type='button' value='horaire' onclick='calendar("+data[y]['clubId']+", "+data[y]['tId']+")'></td></tr>";
     }
@@ -92,7 +95,7 @@ function makeTable(data){
     return table+header+main;
 }
 
-function calendar(clubId, tId) {
+function calendar(clubId, tId) { // fonction affichant le callendrier d'un terrain et enleve la liste des terrains
     $('#terrain').css("display","none");
     $('#calendar').fullCalendar('destroy');
     let data=[];
@@ -132,14 +135,14 @@ function calendar(clubId, tId) {
     });
 }
 
-function addEvent(tId, start, end) {
+function addEvent(tId, start, end) {  // fonction vérifie si le heure de reservation est pas déjà occupé
     start = moment(start).format('YYYY-MM-DD HH:mm:00');
     event.push(start);
     end = moment(end).format('YYYY-MM-DD HH:mm:00');
     event.push(end);
     event.push(tId);
     if(ajax('isfree', {'id': event[2], 'start':event[0], 'end': event[1]})){
-        $( "#dialog" ).dialog("open");
+        $( "#dialog" ).dialog("open"); // demande si on veut un partenaire
     }
 }
 function reserve(){
@@ -155,7 +158,7 @@ function reserve(){
         end: event[1],
         overlap: false
     };
-    ajax('reservation', {'id': event[2], 'start':event[0], 'end': event[1], 'participant': parseInt($('#partenaire').val())+1});
+    ajax('reservation', {'id': event[2], 'start':event[0], 'end': event[1], 'participant': parseInt($('#partenaire').val())+1});  // reservation d'un terrain
     $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
     $('#calendar').fullCalendar('unselect');
 }

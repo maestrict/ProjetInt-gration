@@ -9,8 +9,9 @@ $terrains = terrain('get');
 <html lang="fr">
 <head>
     <title>recherche groupe</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width , initial-scale=1" />
+    <meta name="theme-color" content="#317EFB"/>
+    <meta name="Description" content="pages où est lister les groups de personnes recherchant un partenaire pour faire du sport. plusieurs filtre sont disponible">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/logo_trans.ico">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">

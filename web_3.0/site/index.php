@@ -96,7 +96,7 @@ if(isset($_COOKIE["pseudo"]) and isset($_COOKIE["mdp"])) {
                 <!--<img class="rounded-circle mx-auto" src="/assets/img/terrain.webp" alt="Trouvez un terrain" width="140" height="140">-->
                 <h2>Trouvez un terrain</h2>
                 <p>Grâce à notre système de localisation des clubs et vos critères.</p>
-                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#loginMenu" role="button">View details »</a>
+                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#details" role="button">View details »</a>
             </div>
             <div class="card mb-4 shadow-sm">
                 <picture>
@@ -106,7 +106,7 @@ if(isset($_COOKIE["pseudo"]) and isset($_COOKIE["mdp"])) {
                 </picture>
                 <h2>Trouvez un partenaire</h2>
                 <p>Grâce à notre système de mise en relation de sportifs et vos critères.</p>
-                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#loginMenu" role="button">View details »</a>
+                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#details" role="button">View details »</a>
             </div>
             <div class="card mb-4 shadow-sm">
                 <picture>
@@ -116,7 +116,7 @@ if(isset($_COOKIE["pseudo"]) and isset($_COOKIE["mdp"])) {
                 </picture>
                 <h2>Réservez le terrain</h2>
                 <p>Grâce à notre plateforme qui est directement liée aux clubs.</p>
-                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#loginMenu" role="button">View details »</a>
+                <a class="blue btn btn-secondary" href="http://www.moovego.be:8080/#details" role="button">View details »</a>
             </div>
         </section>
 
@@ -144,7 +144,7 @@ if(isset($_COOKIE["pseudo"]) and isset($_COOKIE["mdp"])) {
 
 
 
-                    Ce projet provient de deux frustrations que nous avons rencontrées : la difficulté de réservation due à un système en ligne pas assez performant voir inexistant : nous avons par exemple remarqué que plus de la moitié des clubs locaux ne disposent pas de système de réservation en ligne. Et, la difficulté de trouver un partenaire de sport.
+                    Ce projet provient de deux frustrations que nous avons rencontrées : la difficulté de réservation due à un système en ligne pas assez performant voire inexistant : nous avons par exemple remarqué que plus de la moitié des clubs locaux ne dispose pas de système de réservation en ligne. Et, la difficulté de trouver un partenaire de sport.
 
 
 

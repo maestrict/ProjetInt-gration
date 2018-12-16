@@ -1,4 +1,4 @@
-function ajax(rq,args=''){
+function ajax(rq,args=''){ // appele ajax à la db en synchrone retourne une valeur
     let data = '';
     $.ajaxSetup({async:false});
     $.post("/assets/php/request.php",{action: rq, id: args}, function( x ) {
@@ -7,27 +7,28 @@ function ajax(rq,args=''){
     return data;
 }
 
-function getEvent(to, args=''){
+/*function getEvent(to, args=''){
     $('#'+to).text(ajax('terrain', args));
-}
+}*/
 
-function updateTable(select){
+function updateTable(select){ // actualise la liste des terrains en fonction des critaires de recherche
     // console.log(select.id);
     // console.log(select.value);
-    console.log(select);
+    // console.log(select);
+    deleteMarkers();
     let table = [];
     if(select.id) {
         table = JSON.parse(ajax('terrain', {[select.id]: select.value}));
-    }else{
+    }else{ // si critaire de recherche est disponibilité
         var terrain = [];
         let start = moment(select['start']).format('YYYY-MM-DD HH:mm:00');
         let end = moment(select['end']).format('YYYY-MM-DD HH:mm:00');
-        table = JSON.parse(ajax('terrain', {"dispo" : {'start':start, 'end': end}}));
+        table = JSON.parse(ajax('terrain', {"dispo" : {'start':start, 'end': end}})); // liste des event qui ne sont PAS disponible
         table.map((value, index) =>{
-            if(table[index]['startDate'] == end){
+            if(table[index]['startDate'] == end){ // si l'event est juste après alors on suprime l'event probleme
                 delete table[index];
             }
-            else if(table[index]['finDate'] == start){
+            else if(table[index]['finDate'] == start){ // si l'event est juste avant alors on suprime l'event probleme
                 delete  table[index];
             }
         });
@@ -35,25 +36,16 @@ function updateTable(select){
         terrain = table.map(x =>x['idTerrain']);
         table = JSON.parse(ajax('terrain',{'notId': terrain}));
     }
-    deleteMarkers();
-    $('#club').html();
+    $('#club').html();  // liste des clubs
     let id = [];
     for(let i in table){
-       addMarker(table[i]);
+       addMarker(table[i]);  // ajoute un marker
         id.push(table[i]["clubId"]);
     }
-    $('#calendar').fullCalendar('destroy');
+    $('#calendar').fullCalendar('destroy');  // enleve un eventuel calendrié
     id = Array.from(new Set(id));
     // console.log(id);
     let data = JSON.parse(ajax('club', id));
-    data.map((value, index) =>{
-       delete data[index]['mdp'];
-       delete data[index]['zip'];
-       delete data[index]['id'];
-       delete data[index]['clubId'];
-       delete data[index]['DateInscription'];
-       delete data[index]['zipCode'];
-    });
     $('#club').html(mktable(data, table));
     /*$('#donne table').DataTable( {
         data: data,
@@ -66,7 +58,7 @@ function updateTable(select){
     });*/
 }
 
-function mktable(data, table){
+function mktable(data, table){  // construit table des club
     let out = '<table class="table table-striped">\n<thead>\n<tr>';
     for(i in Object.keys(data[0])){
         out += "<th>"+Object.keys(data[0])[i]+"</th>";
@@ -88,7 +80,7 @@ function mktable(data, table){
     return out;
 }
 
-function makeCard(data){
+function makeCard(data){  // construit les cartes des evenements
     let out = "<div class='annonce'>";
     out += "<div class='row'>";
     out += "<div class='col'>";
@@ -107,23 +99,20 @@ function makeCard(data){
     return out;
 }
 
-function detail(button){
-    alert("id du terrain selectionné: "+button.parentNode.parentNode.id);
-}
-function load(id, page){
+function load(id, page){  // charge une page dans la div #contain
     $('#contain').fullCalendar('destroy');
     $('#'+id).load("assets/php/"+page+".php");
 }
 
-function chercheUser(name){
+function chercheUser(name){ // cherche dans tout les utilisateurs de la plateforme
     tabAmis(ajax('amis', name), true);
 }
 
-function mesAmis(){
+function mesAmis(){  // cherche dans mes amis
     tabAmis((ajax('amis', null)));
 }
 
-function groups(param=false){
+function groups(param=false){  // liste des groups cherchant un/des joueurs
     var tableau = "";
     let input = ["address", "sport", "date", "nbrParticipants"];
     var data = JSON.parse(ajax('annonce'));
@@ -156,12 +145,12 @@ function groups(param=false){
     $('#listAnnonces').html(tableau);
 }
 
-function rejoindre(id){
+function rejoindre(id){  // rejoindre un groups
     alert(ajax('rejoindreGroup', id));
     groups();
 }
 
-function lsReserve(data){
+function lsReserve(data){  // cartes de reservations
     let out = "<div class='annonce'>";
     out += "<div class='row'>";
     out += "<div class='col'>";
@@ -184,7 +173,7 @@ function lsReserve(data){
     return out;
 }
 
-function mesReservations(){
+function mesReservations(){  // genere une liste reservations
     let data = JSON.parse(ajax('mreserve',"list"));
     let tableau="";
     for(let i in data){
@@ -193,16 +182,16 @@ function mesReservations(){
     $('#reserve').html(tableau);
 }
 
-function annuler(id){
+function annuler(id){  // annuler sa reservation
     alert(ajax('annulerGroupe', id));
     mesReservations();
 }
 
-function changeDonnee(){
-    if($('#prenom').length > 0){
+function changeDonnee(){  // modification des données de l'utilisateurs sur page contact
+    if($('#prenom').length > 0){  // si c'est un sportif
         let cle = ['nom', 'prenom', 'pseudo', 'date', 'email', 'address', 'zipCode'];
         let data = [];
-        for(i in cle){
+        for(i in cle){  // parcours les inputs
             //console.log($('#'+cle[i]).val());
             if(cle[i] == 'date'){
                 data.push(format($('#'+cle[i]).val(), "dd-mm-aaaa"));
@@ -212,7 +201,7 @@ function changeDonnee(){
         }
         // console.log(data);
         ajax('update', data);
-    }else{
+    }else{  // si c'est un club
         let cle = ['nom', 'tel', 'email', 'address', 'zipCode'];
         let data = [];
         for(i in cle){
@@ -225,12 +214,11 @@ function changeDonnee(){
     }
 }
 
-//fonctionne pas la vriable $_FILES est vide (la requete dans request.php est plus là)
 function avatar(){
     console.log(ajax('img'));
 }
 
-function disponnibilite(){
+function disponnibilite(){  // ouvre un calendrié pour selectionner le parametre de recherche disponibilité
     $('#terrain').css("display","none");
     $('#calendar').css("background-color","whitesmoke").fullCalendar({
         defaultView: 'agendaWeek',
@@ -241,11 +229,9 @@ function disponnibilite(){
     });
 }
 
-function tabAmis(data, find=false){
+function tabAmis(data, find=false){  // tableau des amis et recherche d'amis si find=true
 
         //<img class="card-img-top" src="/assets/img/terrain.jpg" alt="Generic placeholder image" width="140" height="140">
-
-    //$('#amis').html(data);
     let out = "";
     let test = JSON.parse(data);
     for(let i in test[0]){
@@ -281,24 +267,24 @@ function tabAmis(data, find=false){
     }
 }
 
-function format(date, format){
+function format(date, format){  // change le format d'une date
     let Adate = date.split('-');
     let Aformat = format.split('-');
     let out = [];
     Aformat.map((val)=>{
         switch(val){
-            case('aaaa'): out.push(Adate[0]);
+            case('aaaa'): out.push(Adate[0]);  // année
                 break;
-            case('mm'): out.push(Adate[1]);
+            case('mm'): out.push(Adate[1]);  // mois
                 break;
-            case('dd'): out.push(Adate[2]);
+            case('dd'): out.push(Adate[2]);  // jours
                 break;
         }
     });
     return out.join('-');
 }
 
-function horraire(){
+function horraire(){  // page horraires du clubs
     let day = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
     var start = new Object();
     var end = new Object();
@@ -324,7 +310,7 @@ function horraire(){
     });
 }
 
-function validateHhMm(inputField) {
+function validateHhMm(inputField) {  // verifie la validité des inputs des heures d'horaire des clubs
     var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
 
     if (isValid) {
@@ -336,7 +322,7 @@ function validateHhMm(inputField) {
     return isValid;
 }
 
-function getBusiness(clubId = null){
+function getBusiness(clubId = null){  // return un object conforme à fullcalendar decrivant les horraires des clubs
     let data = JSON.parse(ajax('horraire',{'get':clubId}));
     //console.log(data);
     let day = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];

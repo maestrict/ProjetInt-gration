@@ -2,8 +2,8 @@ version: '2'
 services:
   mail:
     image: tvial/docker-mailserver:latest
-    hostname: moovego.be #only in local
-    domainname: moovego.be #only in local
+    hostname: perso.moovego.be #only in local
+    domainname: perso.moovego.be #only in local
     container_name: moovego_be_mail
     restart: always
     ports:

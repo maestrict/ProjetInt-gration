@@ -1,0 +1,191 @@
+/*
+.jumbotron{
+    background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/banner.jpg");
+    background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/banner.jpg");
+    background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/banner.jpg");
+    background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/banner.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/
+body.viewport-lg {
+position: absolute;
+}
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+.form-signin .checkbox {
+    font-weight: 400;
+}
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+ul li{
+    display: inline;
+}
+.jumbotron{
+    /*background-image: url("../img/balletest.webp");*/
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center center;
+    /*background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: right;*/
+    color: whitesmoke;
+}
+.no-webp .image {
+    background-image: url('../img/balle2.jpg');
+}
+
+.webp .image {
+    background-image: url('../img/balletest.webp');
+}
+
+#map{
+    width:500px;
+    height:500px;
+}
+.index{
+    margin-top: 5em;
+}
+.contact{
+    padding: 1em;
+}
+#contain{
+    margin-left: 2em;
+}
+.annonce{
+    background-color: white;
+    margin:0.5em;
+    padding:1em;
+    border-radius: 0.5em;
+    color: black;
+}
+.title{
+    text-align: center;
+}
+.blue{
+    background-color: #4d78bc;
+}
+#shsport table{
+    text-align: center;
+    margin: auto;
+}
+#shsport table caption{
+    caption-side: top;
+    text-align: center;
+    color: black;
+}
+#histoire{
+    border:0.5em solid whitesmoke;
+    padding:1em;
+}
+.size{
+    height: 25em;
+}
+main{
+    background-color: dodgerblue; /*#BABABA*/
+    height: auto !important; /* real browsers */
+    min-height: 86vh; /* real browsers */
+    position: relative;
+}
+footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.btn-outline-secondary{
+    color:black;
+    border-color: black;
+}
+.container{
+    padding-top: 1em;
+}
+.ui-autocomplete{
+    z-index:100;
+}
+.card{
+    background-color: whitesmoke;
+}
+#slogan{
+    font-size: 2em;
+}
+.btn-group-vertical{
+    justify-content: unset;
+}
+.major{
+    text-align: center
+}
+#donne{
+    height:300px;
+}
+#terrain{
+    overflow-y: auto;
+    max-height: 300px;
+}
+#tbTerrain, #map, #club{
+    margin:0.5em;
+}
+.img-fluid{
+    margin:1em;
+}
+.card-img-top{
+    max-height: 30%;
+}
+.ltamis{
+    max-width: 15em;
+}
+#listAnnonces{
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.label{
+    color:whitesmoke;
+}
+@media only screen and (min-width : 575px) {
+    #dropdownMenu2 {
+        display: inline;
+    }
+    #mobile {
+        display: none;
+    }
+}
+@media only screen and (max-width : 576px) {
+    #dropdownMenu2 {
+        display: none;
+    }
+    #mobile {
+        display: inline;
+    }
+}
+
+.titlehoraire{
+  text-align: center;
+}
+
+.details_annonce{
+  font-weight: bold;
+}

@@ -70,7 +70,7 @@ $terrains = terrain('get');
                     </div>
                     <div class="form-group">
                       <select class="form-control">
-                          <option value="" disabled selected>Distance (Km)</option>
+                          <option value="" onchange="addRadius(this)" disabled selected>Distance (Km)</option>
                           <?php
                           for($i=5;$i<45;$i+=5){
                               echo"<option value='{$i}'>{$i}</option>";

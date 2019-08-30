@@ -6,7 +6,7 @@ MooveGo est une plateforme permettant aux sportifs de réserver un terrain de Te
 
 
 
-![alt text](http://www.moovego.be:8080/assets/img/logonoir.png "Logo Title Text 1")
+![alt text](https://perso.moovego.be//assets/img/logonoir.png "Logo Title Text 1")
 
 
 ## HISTOIRE

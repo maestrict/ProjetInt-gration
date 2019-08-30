@@ -42,6 +42,13 @@ function addMarker(terrain) {
         $('#terrain').html(makeTable(terrain))
     });
 }
+function addRadius(terrain) { //fonction rajoutant le rayon
+	var optionsCercle = {
+	map: maCarte,
+	radius: 0
+};
+var monCercle = new google.maps.Circle(optionsCercle);
+}
 function setMapOnAll(map) {
     for (let i = 0; i < marqueur.length; i++) {
         marqueur[i].setMap(map);
